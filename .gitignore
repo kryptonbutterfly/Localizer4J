@@ -1,0 +1,7 @@
+/bin/
+/.settings/
+/build/
+/Localizer4J.jar
+/libs/
+
+deb-content/changelog

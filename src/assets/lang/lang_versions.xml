@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+    <types>
+        <item id="0" name="java.util.HashMap"/>
+        <item id="1" name="java.lang.String"/>
+        <item id="2" name="java.lang.Integer"/>
+    </types>
+    <config>
+        <languages type="0">
+            <item>
+                <key type="1" value="en_US"/>
+                <value type="2" value="18"/>
+            </item>
+        </languages>
+    </config>
+</root>

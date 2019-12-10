@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Type=Application
+Terminal=false
+Exec=java -jar /usr/share/Localizer4J/Localizer4J.jar -i -pF 
+Icon=/usr/share/Localizer4J/icon.svg
+Name=Localizer4J
+GenericName=Localizer4J
+Keywords=i18n, l10n, translate, localize
+Categories=Development;
+MimeType=application/lang-project

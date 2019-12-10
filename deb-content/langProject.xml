@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+	<mime-type type="application/lang-project">
+		<comment>l10n project</comment>
+		<glob pattern="lang.project"/>
+	</mime-type>
+</mime-info>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+    <types>
+        <item id="0" name="java.util.HashSet"/>
+        <item id="1" name="java.lang.String"/>
+    </types>
+    <config>
+        <sourceFolder value="./src"/>
+        <langFolder value="./src/assets/lang"/>
+        <languageNames type="0">
+            <item type="1" value="en_US"/>
+        </languageNames>
+        <fallback value="en_US"/>
+        <selectedLanguage value="en_US"/>
+        <fileSettings>
+            <localizationDelimiter value="="/>
+            <langFileExtension value=".lang"/>
+            <usePropertyFiles value="false"/>
+            <versionListFile value="true"/>
+        </fileSettings>
+    </config>
+</root>

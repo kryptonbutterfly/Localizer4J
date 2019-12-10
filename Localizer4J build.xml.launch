@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.ant.AntLaunchConfigurationType">
+    <booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="true"/>
+    <stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;resources&gt;&#10;&lt;item path=&quot;/Localizer4J/build&quot; type=&quot;2&quot;/&gt;&#10;&lt;/resources&gt;}"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/Localizer4J/build.xml"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk-18.0.1.1/"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.eclipse.ant.internal.launching.remote.InternalAntRunner"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Localizer4J"/>
+    <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
+    <mapAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES">
+        <mapEntry key="ws.ArgsManager" value="${workspace_loc:/ArgsManager}"/>
+        <mapEntry key="ws.Bounded" value="${workspace_loc:/Bounded}"/>
+        <mapEntry key="ws.Collections" value="${workspace_loc:/Collections}"/>
+        <mapEntry key="ws.Concurrent" value="${workspace_loc:/Concurrent}"/>
+        <mapEntry key="ws.Functional" value="${workspace_loc:/Functional}"/>
+        <mapEntry key="ws.IOUtils" value="${workspace_loc:/IOUtils}"/>
+        <mapEntry key="ws.Iterator" value="${workspace_loc:/Iterator}"/>
+        <mapEntry key="ws.JavaLexer" value="${workspace_loc:/JavaLexer}"/>
+        <mapEntry key="ws.Localization" value="${workspace_loc:/Localization}"/>
+        <mapEntry key="ws.LocalizationVersionConfig" value="${workspace_loc:/LocalizationVersionConfig}"/>
+        <mapEntry key="ws.Monads" value="${workspace_loc:/Monads}"/>
+        <mapEntry key="ws.ReflectionUtils" value="${workspace_loc:/ReflectionUtils}"/>
+        <mapEntry key="ws.SwingUtils" value="${workspace_loc:/SwingUtils}"/>
+        <mapEntry key="ws.System" value="${workspace_loc:/System}"/>
+        <mapEntry key="ws.mathUtils" value="${workspace_loc:/mathUtils}"/>
+        <mapEntry key="ws.xmlConfig4J" value="${workspace_loc:/xmlConfig4J}"/>
+    </mapAttribute>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_TARGETS" value="create_run_jar,deploy program,"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LAUNCH_CONFIGURATION_BUILD_SCOPE" value="${projects:Localizer4J}"/>
+    <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/Localizer4J/build.xml}"/>
+    <stringAttribute key="process_factory_id" value="org.eclipse.ant.ui.remoteAntProcessFactory"/>
+</launchConfiguration>

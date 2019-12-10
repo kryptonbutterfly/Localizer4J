@@ -1,0 +1,6 @@
+Section: editors
+Priority: optional
+Maintainer: tinycodecrank
+Description: Internationalization Tool
+Architecture: all
+Depends: 

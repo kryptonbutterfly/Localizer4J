@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE xml>
+<project default="create_run_jar" name="Create Runnable Jar for Project Localize4J with Jar-in-Jar Loader">
+	<target name="echo">
+		<echoproperties></echoproperties>
+	</target>
+	
+    <target name="create_run_jar">
+        <jar destfile="build/Localizer4J.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="de.tinycodecrank.l4j.startup.Localizer4J"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./
+                	commons-text-1.9.jar
+                	math_utils-1.0.0.jar
+                	reflection_utils-1.0.0.jar
+                	better_functionals-1.0.0.jar
+                	tiny_iterators-1.0.0.jar
+                	xml_config_4j-2.1.0.jar
+                	LocalizationVersionConfig.jar
+                	Localization.jar
+                	tiny_monads-1.0.0.jar
+                	ArgsManager.jar
+                	bounded_values-1.0.0.jar
+                	Collections.jar
+                	IOUtils.jar
+                	Concurrent.jar
+                	System.jar
+                	JavaLexer.jar
+                	SwingUtils.jar
+                	"/>
+            	<attribute name="Add-Opens" value="java.desktop/sun.awt.X11"/>
+            </manifest>
+            <zipfileset src="libs/jar-in-jar-loader.zip"/>
+        	<zipfileset dir="./libs" includes="commons-text-1.9.jar"/>
+            <fileset dir="./bin"/>
+        	<zipfileset dir="${ws.mathUtils}/target" includes="math_utils-1.0.0.jar"/>
+            <zipfileset dir="${ws.ArgsManager}/build" includes="ArgsManager.jar"/>
+        	<zipfileset dir="${ws.xmlConfig4J}/target" includes="xml_config_4j-2.1.0.jar"/>
+        	<zipfileset dir="${ws.Collections}/build" includes="Collections.jar"/>
+        	<zipfileset dir="${ws.Functional}/target" includes="better_functionals-1.0.0.jar"/>
+        	<zipfileset dir="${ws.Iterator}/target" includes="tiny_iterators-1.0.0.jar"/>
+        	<zipfileset dir="${ws.Bounded}/target" includes="bounded_values-1.0.0.jar"/>
+        	<zipfileset dir="${ws.IOUtils}/build" includes="IOUtils.jar"/>
+        	<zipfileset dir="${ws.JavaLexer}/build/" includes="JavaLexer.jar"/>
+        	<zipfileset dir="${ws.Concurrent}/build" includes="Concurrent.jar"/>
+        	<zipfileset dir="${ws.Localization}/build" includes="Localization.jar"/>
+        	<zipfileset dir="${ws.LocalizationVersionConfig}/build" includes="LocalizationVersionConfig.jar"/>
+        	<zipfileset dir="${ws.Monads}/target" includes="tiny_monads-1.0.0.jar"/>
+        	<zipfileset dir="${ws.ReflectionUtils}/target" includes="reflection_utils-1.0.0.jar"/>
+        	<zipfileset dir="${ws.SwingUtils}/build" includes="SwingUtils.jar"/>
+        	<zipfileset dir="${ws.System}/build" includes="System.jar"/>
+        </jar>
+	</target>
+    <target name="deploy program">
+        <exec executable="/bin/bash">
+            <arg value="./deb-content/packagedeb.sh"/>
+        </exec>
+    </target>
+</project>

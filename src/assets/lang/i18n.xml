@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+	<types/>
+	<config>
+		<localizationFolder info="The folder containing the localizations for all supported languages." null="true"/>
+		<languageLocations>
+        	<item type="java.lang.String" value="/assets/lang/en_US.lang"/>
+		</languageLocations>
+		<defaultLanguage info="The default language" value="en_US"/>
+		<extension info="The fileExtension for localizationfiles." value=".lang"/>
+		<delimiter info="The charset used to seperate the identifier from the translation." value="="/>
+	</config>
+</root>
