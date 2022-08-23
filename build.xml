@@ -32,8 +32,8 @@
                 	"/>
             	<attribute name="Add-Opens" value="java.desktop/sun.awt.X11"/>
             </manifest>
-            <zipfileset src="libs/jar-in-jar-loader.zip"/>
-        	<zipfileset dir="./libs" includes="commons-text-1.9.jar"/>
+            <zipfileset src="dep/jar-in-jar-loader.zip"/>
+        	<zipfileset dir="./dep" includes="commons-text-1.9.jar"/>
             <fileset dir="./bin"/>
         	<zipfileset dir="${ws.mathUtils}/target" includes="math_utils-1.0.0.jar"/>
             <zipfileset dir="${ws.ArgsManager}/build" includes="ArgsManager.jar"/>
