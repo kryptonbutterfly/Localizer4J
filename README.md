@@ -10,7 +10,6 @@ java version | app version | jar | deb
 ## Dependencies
 
 * [**commons-text-1.9.jar**](https://repo1.maven.org/maven2/org/apache/commons/commons-text/1.9/commons-text-1.9.jar)
-
 * [**tinyArgsManager.jar**](https://github.com/tinycodecrank/tinyArgsManager/releases/download/v0.1.0/tinyArgsmanager.jar)
 * [**BoundedValues.jar**](https://github.com/tinycodecrank/BoundedValues/releases/download/v1.0.0/BoundedValues.jar)
 * [**tinyCollections.jar**](https://github.com/tinycodecrank/tinyCollections/releases/download/v1.0.0/tinyCollections.jar)
