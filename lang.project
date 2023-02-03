@@ -9,8 +9,9 @@
         <langFolder value="./src/assets/lang"/>
         <languageNames type="0">
             <item type="1" value="en_US"/>
+            <item type="1" value="de_DE"/>
         </languageNames>
-        <fallback value="en_US"/>
+        <fallback value="de_DE"/>
         <selectedLanguage value="en_US"/>
         <fileSettings>
             <localizationDelimiter value="="/>

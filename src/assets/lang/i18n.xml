@@ -2,9 +2,10 @@
 <root>
 	<types/>
 	<config>
-		<localizationFolder info="The folder containing the localizations for all supported languages." null="true"/>
+		<localizationFolder info="The folder containing the localizations for all supported languages." value="/assets/lang/"/>
 		<languageLocations>
         	<item type="java.lang.String" value="/assets/lang/en_US.lang"/>
+        	<item type="java.lang.String" value="/assets/lang/de_DE.lang"/>
 		</languageLocations>
 		<defaultLanguage info="The default language" value="en_US"/>
 		<extension info="The fileExtension for localizationfiles." value=".lang"/>
