@@ -13,22 +13,36 @@ public abstract class ObservableLangDialog<Logic extends DialogLogicTemplate<?, 
 {
 	private final LangManager langManager;
 	
-	public ObservableLangDialog(Window owner, ModalityType modality, Consumer<GuiCloseEvent<R>> closeListener, Localizer localizer)
+	public ObservableLangDialog(
+		Window owner,
+		ModalityType modality,
+		Consumer<GuiCloseEvent<R>> closeListener,
+		Localizer localizer)
 	{
 		super(owner, modality, closeListener);
 		this.langManager = new LangManager(localizer);
 	}
 	
-	public ObservableLangDialog(Window owner, ModalityType modality, Consumer<GuiCloseEvent<R>> closeListener, Localizer localizer, Args args)
+	public ObservableLangDialog(
+		Window owner,
+		ModalityType modality,
+		Consumer<GuiCloseEvent<R>> closeListener,
+		Localizer localizer,
+		Args args)
 	{
 		super(owner, modality, closeListener, args);
 		this.langManager = new LangManager(localizer);
 	}
 	
 	@SafeVarargs
-	protected final void reg(String key, Consumer<String> ... listener)
+	protected final void reg(String key, Consumer<String>... listener)
 	{
 		this.langManager.reg(key, listener);
+	}
+	
+	public final Localizer localizer()
+	{
+		return this.langManager.localizer;
 	}
 	
 	@Override

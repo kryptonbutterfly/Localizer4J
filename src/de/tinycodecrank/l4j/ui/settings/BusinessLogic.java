@@ -16,22 +16,12 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 		this.fileSettings = settings;
 	}
 	
-	protected void disposeAction()
-	{
-		gui.if_(gui->
-		{
-			Localizer4J.prefs.settingsWindow.posX = gui.getX();
-			Localizer4J.prefs.settingsWindow.posY = gui.getY(); 
-			Localizer4J.prefs.save();
-		});
-	}
-	
 	void fileTypeChanged(ActionEvent event)
 	{
-		gui.if_(gui->
+		gui.if_(gui ->
 		{
-			int fileType = gui.comboBoxFileType.getSelectedIndex();
-			switch(fileType)
+			final int fileType = gui.comboBoxFileType.getSelectedIndex();
+			switch (fileType)
 			{
 				case (0):
 					gui.panelSettingsLang.setVisible(false);
@@ -45,37 +35,62 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 		});
 	}
 	
+	void setLanguage(ActionEvent event)
+	{
+		gui.if_(gui ->
+		{
+			final var uiLang = (String) gui.comboBoxUiLanguage.getSelectedItem();
+			gui.localizer().setCurrentLanguage(uiLang);
+		});
+	}
+	
 	void buttonOK(ActionEvent event)
 	{
-		gui.if_(gui->
+		gui.if_(gui ->
 		{
 			String langFileExtension = gui.textField.getText().trim();
-			if(!langFileExtension.startsWith("."))
+			if (!langFileExtension.startsWith("."))
 			{
 				langFileExtension = "." + langFileExtension;
 			}
 			
-			fileSettings.usePropertyFiles = gui.comboBoxFileType.getSelectedIndex() == 0;
-			fileSettings.langFileExtension = langFileExtension;
-			fileSettings.localizationDelimiter = gui.textField_1.getText().trim();
-			fileSettings.versionListFile = gui.chckbxSaveVersionFile.isSelected();
-			Localizer4J.prefs.history.maxLength = (int) gui.spinnerHistoryLength.getModel().getValue();
+			fileSettings.usePropertyFiles		= gui.comboBoxFileType.getSelectedIndex() == 0;
+			fileSettings.langFileExtension		= langFileExtension;
+			fileSettings.localizationDelimiter	= gui.textField_1.getText().trim();
+			fileSettings.versionListFile		= gui.chckbxSaveVersionFile.isSelected();
+			Localizer4J.prefs.history.maxLength	= (int) gui.spinnerHistoryLength.getModel().getValue();
 			
-			while(Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
+			while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
 			{
 				Localizer4J.prefs.history.recent.removeLast();
 			}
-			while(Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
+			while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
 			{
 				Localizer4J.prefs.history.recent.removeLast();
 			}
-	
+			Localizer4J.prefs.language = gui.localizer().currentLanguage();
+			
 			gui.dispose();
 		});
 	}
 	
 	void buttonCancle(ActionEvent event)
 	{
-		gui.if_(Settings::dispose);
+		gui.if_(gui ->
+		{
+			gui.localizer().setCurrentLanguage(Localizer4J.prefs.language);
+			gui.dispose();
+		});
+	}
+	
+	@Override
+	protected void disposeAction()
+	{
+		gui.if_(gui ->
+		{
+			Localizer4J.prefs.settingsWindow.posX	= gui.getX();
+			Localizer4J.prefs.settingsWindow.posY	= gui.getY();
+			Localizer4J.prefs.save();
+		});
 	}
 }

@@ -50,6 +50,7 @@ Settings.label.History max length = Historie max Länge:
 Settings.label.Language file extension = Sprachdateiendung:
 Settings.label.LocalizationDelimiter = Übersetzungstrennzeichen:
 Settings.label.Save to lang_versions.xml = Speichern in lang_versions.xml
+Settings.label.UILanguage = Anwendungssprache
 Settings.label.tooltip.Language file extension = Die Dateiendung, die für Übersetzungsdateien verwendet wird.
 Settings.label.tooltip.LocalizationDelimiter = Das Trennzeichen, das zum Trennen von Kennungen und Übersetzungen in den Übersetzungsdateien verwendet wird.
 Settings.title = Einstellungen

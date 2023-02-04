@@ -32,7 +32,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.TableColumn;
 
 import de.tinycodecrank.i18n.Localizer;
 import de.tinycodecrank.l4j.data.gui.Translatable.TranslationState;
@@ -52,47 +51,47 @@ import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 @SuppressWarnings("serial")
 public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 {
-	private final String countTitle = "Main.table.count";
-	private final String identifierTitle = "Main.table.identifier";
+	private final String	countTitle		= "Main.table.count";
+	private final String	identifierTitle	= "Main.table.identifier";
 	
-	private final String lineTitle = "Main.table.Line";
-	private final String classTitle = "Main.table.Class";
-	private final String fileTitle = "Main.table.File";
-	private final String textTitle = "Main.table.Text";
+	private final String	lineTitle	= "Main.table.Line";
+	private final String	classTitle	= "Main.table.Class";
+	private final String	fileTitle	= "Main.table.File";
+	private final String	textTitle	= "Main.table.Text";
 	
-	JMenu mnOpenRecent;
-	JMenuItem mnLanguage;
-	private JMenuItem mntmCreate;
-	JMenuItem mntmDelete;
-	private JMenuItem mntmGeneralSettings;
-	JMenuItem mntmProjectSettings;
-	JMenuItem mntmSaveProject;
+	JMenu				mnOpenRecent;
+	JMenuItem			mnLanguage;
+	private JMenuItem	mntmCreate;
+	JMenuItem			mntmDelete;
+	private JMenuItem	mntmGeneralSettings;
+	JMenuItem			mntmProjectSettings;
+	JMenuItem			mntmSaveProject;
 	
 	JToggleButton pin;
 	
-	JComboBox<Language> comboBoxLanguage;
-	JComboBox<Language> comboBoxFallback;
+	JComboBox<Language>	comboBoxLanguage;
+	JComboBox<Language>	comboBoxFallback;
 	
 	JButton btnRemove;
 	
-	TableModelClasses tableModelClasses = new TableModelClasses(new String[] {lineTitle, classTitle});
-	TableModelMisc tableModelMisc = new TableModelMisc(new String[]{lineTitle, fileTitle, textTitle});
-	FilterTableModel tableModel = null;
+	TableModelClasses	tableModelClasses	= new TableModelClasses(new String[] { lineTitle, classTitle });
+	TableModelMisc		tableModelMisc		= new TableModelMisc(new String[] { lineTitle, fileTitle, textTitle });
+	FilterTableModel	tableModel			= null;
 	
-	JTable tableClasses;
-	JTable tableMisc;
-	JTable table;
+	JTable	tableClasses;
+	JTable	tableMisc;
+	JTable	table;
 	
-	JTextArea txtAddKey;
-	JButton btnAddKey;
-
-	JTextArea txtTranslation;
-	JTextArea txtTranslationFallback;
+	JTextArea	txtAddKey;
+	JButton		btnAddKey;
 	
-	JButton btnApply;
-	JSplitPane splitPane;
-	JSplitPane splitPaneValue;
-	JSplitPane splitOccurences;
+	JTextArea	txtTranslation;
+	JTextArea	txtTranslationFallback;
+	
+	JButton		btnApply;
+	JSplitPane	splitPane;
+	JSplitPane	splitPaneValue;
+	JSplitPane	splitOccurences;
 	
 	boolean initialized = false;
 	
@@ -109,7 +108,9 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		
 		businessLogic.if_(bl ->
 		{
-			tableModel = new FilterTableModel(new String[]{countTitle, identifierTitle}, t -> t.getTranslationState() != TranslationState.MISC_TRANSLATABLE);
+			tableModel = new FilterTableModel(
+				new String[] { countTitle, identifierTitle },
+				t -> t.getTranslationState() != TranslationState.MISC_TRANSLATABLE);
 			reg(countTitle, s -> tableModel.setHeaderTitle(s, 0));
 			reg(identifierTitle, s -> tableModel.setHeaderTitle(s, 1));
 		});
@@ -118,9 +119,11 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		reg("Main.title", this::setTitle);
 		setMinimumSize(new Dimension(600, 400));
 		guiPrefs.setBoundsAndState(this);
-
-		final ImageIcon pinnedIcon = ColorUtils.selectResize(getBackground(), Assets.PINNED_LIGHT , Assets.PINNED_DARK, 20, 20);
-		final ImageIcon unpinnedIcon = ColorUtils.selectResize(getBackground(), Assets.UNPINNED_LIGHT, Assets.UNPINNED_DARK, 20, 20);
+		
+		final ImageIcon	pinnedIcon		= ColorUtils
+			.selectResize(getBackground(), Assets.PINNED_LIGHT, Assets.PINNED_DARK, 20, 20);
+		final ImageIcon	unpinnedIcon	= ColorUtils
+			.selectResize(getBackground(), Assets.UNPINNED_LIGHT, Assets.UNPINNED_DARK, 20, 20);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -196,8 +199,8 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		menuBar.add(pin);
 		businessLogic.if_(bl -> pin.addActionListener(bl::changePinned));
 		
-		//End Menu
-		//Content
+		// End Menu
+		// Content
 		
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -236,15 +239,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		
 		this.table = new JTable();
 		table.setModel(this.tableModel);
-		TableColumn firstCol = table.getColumnModel().getColumn(0);
-		firstCol.setPreferredWidth(34);
-		firstCol.setMinWidth(34);
-		firstCol.setMaxWidth(34);
-		firstCol.setCellRenderer(new CountTableCellRenderer());
-		table.getColumnModel().getColumn(1).setCellRenderer(new TranslationTableCellRenderer(l10n));
-		table.setOpaque(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		initTable(table, l10n);
 		businessLogic.if_(bl -> table.getSelectionModel().addListSelectionListener(bl::tableSelectionListener));
 		
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -265,7 +260,6 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		panelAddKey.setLayout(new BorderLayout(0, 0));
 		panelAddKey.add(txtAddKey);
 		panelAddKey.add(btnAddKey, BorderLayout.EAST);
-		
 		
 		JPanel panelTranslation = new JPanel();
 		panelTranslation.setLayout(new BorderLayout(0, 0));
@@ -294,7 +288,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		JPanel panelTitleFallBack = new JPanel();
 		horizontalBoxTitle.add(panelTitleFallBack);
 		panelTitleFallBack.setLayout(new BorderLayout(0, 0));
-
+		
 		JTextField labelTranslationFallback = new JTextField();
 		reg("Main.label.TranslationFallback", labelTranslationFallback::setText);
 		labelTranslationFallback.setEditable(false);
@@ -307,25 +301,27 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panelTable, panelTranslation);
 		splitPane.setContinuousLayout(true);
 		
-		tableClasses = new JTable();
-		tableClasses.setModel(tableModelClasses);
-		firstCol = tableClasses.getColumnModel().getColumn(0);
-		firstCol.setResizable(false);
-		firstCol.setPreferredWidth(40);
-		firstCol.setMinWidth(40);
-		firstCol.setMaxWidth(40);
-		tableClasses.getColumnModel().getColumn(1).setResizable(false);
+		{
+			tableClasses = new JTable();
+			tableClasses.setModel(tableModelClasses);
+			final var firstCol = tableClasses.getColumnModel().getColumn(0);
+			firstCol.setResizable(false);
+			firstCol.setPreferredWidth(40);
+			firstCol.setMinWidth(40);
+			firstCol.setMaxWidth(40);
+			tableClasses.getColumnModel().getColumn(1).setResizable(false);
+		}
 		
 		JScrollPane scrollPaneClasses = new JScrollPane(tableClasses);
-		
-		tableMisc = new JTable();
-		tableMisc.setModel(tableModelMisc);
-		firstCol = tableMisc.getColumnModel().getColumn(0);
-		firstCol.setResizable(false);
-		firstCol.setPreferredWidth(40);
-		firstCol.setMinWidth(40);
-		firstCol.setMaxWidth(40);
-		
+		{
+			tableMisc = new JTable();
+			tableMisc.setModel(tableModelMisc);
+			final var firstCol = tableMisc.getColumnModel().getColumn(0);
+			firstCol.setResizable(false);
+			firstCol.setPreferredWidth(40);
+			firstCol.setMinWidth(40);
+			firstCol.setMaxWidth(40);
+		}
 		JScrollPane scrollPaneMisc = new JScrollPane(tableMisc);
 		
 		splitOccurences = new JSplitPane(JSplitPane.VERTICAL_SPLIT, scrollPaneClasses, scrollPaneMisc);
@@ -369,9 +365,8 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		txtTranslationFallback.setEditable(false);
 		panelTranslationGrid.add(txtTranslationFallback);
 		
-		
-		JPanel panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+		JPanel		panel		= new JPanel();
+		FlowLayout	flowLayout	= (FlowLayout) panel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		panelValue.add(panel, BorderLayout.SOUTH);
 		
@@ -390,9 +385,9 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		
 		JPanel panel_2 = new JPanel();
 		vertBox.add(panel_2);
-		((FlowLayout)panel_2.getLayout()).setAlignment(FlowLayout.TRAILING);
+		((FlowLayout) panel_2.getLayout()).setAlignment(FlowLayout.TRAILING);
 		
-		//TODO add capability to add new key
+		// TODO add capability to add new key
 		
 		btnRemove = new JButton();
 		reg("Main.button.remove", btnRemove::setText);
@@ -412,10 +407,23 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		
 		initialized = true;
 	}
-
+	
 	@Override
 	protected BusinessLogic createBusinessLogic(Localizer l10n)
 	{
 		return new BusinessLogic(this, l10n);
+	}
+	
+	private static void initTable(JTable table, Localizer l10n)
+	{
+		final var firstCol = table.getColumnModel().getColumn(0);
+		firstCol.setPreferredWidth(34);
+		firstCol.setMinWidth(34);
+		firstCol.setMaxWidth(34);
+		firstCol.setCellRenderer(new CountTableCellRenderer());
+		table.getColumnModel().getColumn(1).setCellRenderer(new TranslationTableCellRenderer(l10n));
+		table.setOpaque(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 	}
 }

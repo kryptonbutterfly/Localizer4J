@@ -31,15 +31,21 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 {
 	private final FileSettings guiPrefs;
 	
-	private JPanel contentPane;
-	JTextField textField;
-	JTextField textField_1;
-	JPanel panelSettingsLang;
-	JComboBox<String> comboBoxFileType;
-	JSpinner spinnerHistoryLength;
-	JCheckBox chckbxSaveVersionFile;
+	private JPanel		contentPane;
+	JTextField			textField;
+	JTextField			textField_1;
+	JPanel				panelSettingsLang;
+	JComboBox<String>	comboBoxFileType;
+	JSpinner			spinnerHistoryLength;
+	JCheckBox			chckbxSaveVersionFile;
+	JComboBox<String>	comboBoxUiLanguage;
 	
-	public Settings(Window owner, ModalityType modality, Consumer<GuiCloseEvent<Void>> closeListener, FileSettings fileSettings, Localizer l10n)
+	public Settings(
+		Window owner,
+		ModalityType modality,
+		Consumer<GuiCloseEvent<Void>> closeListener,
+		FileSettings fileSettings,
+		Localizer l10n)
 	{
 		super(owner, modality, closeListener, l10n, fileSettings);
 		this.guiPrefs = fileSettings;
@@ -71,9 +77,9 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		panel.add(lblFileType);
 		
 		comboBoxFileType = new JComboBox<>();
-		comboBoxFileType.setModel(new DefaultComboBoxModel<String>(new String[] {"Properties", "Lang"}));
+		comboBoxFileType.setModel(new DefaultComboBoxModel<String>(new String[] { "Properties", "Lang" }));
 		comboBoxFileType.setSelectedIndex(fileSettings.usePropertyFiles ? 0 : 1);
-		businessLogic.if_(bl-> comboBoxFileType.addActionListener(bl::fileTypeChanged));
+		businessLogic.if_(bl -> comboBoxFileType.addActionListener(bl::fileTypeChanged));
 		panel.add(comboBoxFileType);
 		
 		JLabel label_2 = new JLabel();
@@ -97,7 +103,7 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		reg("Settings.label.tooltip.Language file extension", label::setToolTipText);
 		panelSettingsLang.add(label);
 		
-		textField = new JTextField();		
+		textField = new JTextField();
 		reg("Settings.label.tooltip.Language file extension", textField::setToolTipText);
 		textField.setText(guiPrefs.langFileExtension);
 		textField.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -124,7 +130,7 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		
 		JPanel panel_2 = new JPanel();
 		panel_1.add(panel_2, BorderLayout.SOUTH);
-		panel_2.setLayout(new GridLayout(1, 0, 0, 0));
+		panel_2.setLayout(new GridLayout(0, 2, 0, 0));
 		
 		JLabel lblHistoryMaxLength = new JLabel();
 		reg("Settings.label.History max length", lblHistoryMaxLength::setText);
@@ -133,6 +139,15 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		spinnerHistoryLength = new JSpinner();
 		spinnerHistoryLength.setModel(new SpinnerNumberModel(Localizer4J.prefs.history.maxLength, 0, 20, 1));
 		panel_2.add(spinnerHistoryLength);
+		
+		JLabel lblUILanguage = new JLabel();
+		reg("Settings.label.UILanguage", lblUILanguage::setText);
+		panel_2.add(lblUILanguage);
+		
+		comboBoxUiLanguage = new JComboBox<>(l10n.manager.languages());
+		comboBoxUiLanguage.setSelectedItem(l10n.currentLanguage());
+		panel_2.add(comboBoxUiLanguage);
+		businessLogic.if_(bl -> comboBoxUiLanguage.addActionListener(bl::setLanguage));
 		
 		JPanel panelOkAbort = new JPanel();
 		contentPane.add(panelOkAbort, BorderLayout.SOUTH);
@@ -143,22 +158,22 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		
 		JPanel panelConfirmButtons = new JPanel();
 		panelOkAbort.add(panelConfirmButtons, BorderLayout.CENTER);
-		FlowLayout flowLayout = (FlowLayout)panelConfirmButtons.getLayout();
+		FlowLayout flowLayout = (FlowLayout) panelConfirmButtons.getLayout();
 		flowLayout.setAlignment(FlowLayout.TRAILING);
 		
 		JButton btnOk = new JButton();
 		reg("Settings.button.ok", btnOk::setText);
 		panelConfirmButtons.add(btnOk);
-		businessLogic.if_(bl-> btnOk.addActionListener(bl::buttonOK));
+		businessLogic.if_(bl -> btnOk.addActionListener(bl::buttonOK));
 		
 		JButton btnCancle = new JButton();
 		reg("Settings.button.cancle", btnCancle::setText);
 		panelConfirmButtons.add(btnCancle);
-		businessLogic.if_(bl->btnCancle.addActionListener(bl::buttonCancle));
+		businessLogic.if_(bl -> btnCancle.addActionListener(bl::buttonCancle));
 		
 		this.setVisible(true);
 	}
-
+	
 	@Override
 	protected BusinessLogic createBusinessLogic(FileSettings settings)
 	{

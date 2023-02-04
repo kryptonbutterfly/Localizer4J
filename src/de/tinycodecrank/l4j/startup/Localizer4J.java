@@ -101,9 +101,12 @@ public class Localizer4J
 			}
 			event.consume();
 		});
-		return Opt.of(prefs.language)
+		Localizer localizer = Opt.of(prefs.language)
 			.map(localizationManager::buildLocalizer)
 			.get(localizationManager::buildLocalizer);
+		if (prefs.language == null)
+			prefs.language = localizer.currentLanguage();
+		return localizer;
 	}
 	
 	private static void loadConfig(FileConfig config)

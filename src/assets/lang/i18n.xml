@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE xml>
 <root>
 	<types/>
 	<config>
@@ -9,6 +10,6 @@
 		</languageLocations>
 		<defaultLanguage info="The default language" value="en_US"/>
 		<extension info="The fileExtension for localizationfiles." value=".lang"/>
-		<delimiter info="The charset used to seperate the identifier from the translation." value="="/>
+		<delimiter info="The charset used to separate the identifier from the translation." value="="/>
 	</config>
 </root>
