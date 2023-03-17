@@ -5,7 +5,7 @@ A Language file Editor with special sauce for java projects.
 
 java version | app version | jar | deb
 :----------: | :---------: | :-: | :-:
-18+          | 1.1.0       | [Localizer4J.jar](https://github.com/tinycodecrank/Localizer4J/releases/download/v1.1.0/Localizer4J.jar) | [Localizer4J-1.1.0.deb](https://github.com/tinycodecrank/Localizer4J/releases/download/v1.1.0/Localizer4J-1.1.0.deb)
+18+          | 2.0.0       | [Localizer4J.jar](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.0.0/Localizer4J.jar) | [Localizer4J-2.0.0.deb](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.0.0/Localizer4J-2.0.0.deb)
 
 ## Dependencies
 
@@ -26,3 +26,4 @@ java version | app version | jar | deb
 * [**tinySwingUtils.jar**](https://github.com/tinycodecrank/tinySwingUtils/releases/download/v1.0.0/tinySwingUtils.jar)
 * [**tinySystemUtils.jar**](https://github.com/tinycodecrank/tinySystemUtils/releases/download/1.0.0/tinySystemUtils.jar)
 * [**xmlConfig4J.jar**](https://github.com/tinycodecrank/xmlConfig4J/releases/download/v2.1.0/xmlConfig4J.jar)
+* [**gson.jar**](https://search.maven.org/remotecontent?filepath=com/google/code/gson/gson/2.10.1/gson-2.10.1.jar)

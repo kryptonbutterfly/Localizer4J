@@ -20,10 +20,8 @@ import de.tinycodecrank.l4j.config.ProjectConfig;
 import de.tinycodecrank.l4j.data.gui.Translatable;
 import de.tinycodecrank.l4j.data.gui.Translatable.TranslationState;
 import de.tinycodecrank.l4j.data.gui.Translation;
-import de.tinycodecrank.l4j.data.persistence.LangLoader;
 import de.tinycodecrank.l4j.data.persistence.Language;
 import de.tinycodecrank.l4j.data.persistence.LanguageLoader;
-import de.tinycodecrank.l4j.data.persistence.PropertiesLoader;
 import de.tinycodecrank.l4j.startup.Localizer4J;
 import de.tinycodecrank.l4j.startup.ProgramArgs;
 import de.tinycodecrank.l4j.ui.lang.LangGui;
@@ -114,15 +112,9 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 						.filter(StringUtils::isNotEmpty)
 						.if_(s ->
 						{
-							LanguageLoader loader;
-							if (project.fileSettings.usePropertyFiles)
-							{
-								loader = new PropertiesLoader();
-							}
-							else
-							{
-								loader = new LangLoader(project.fileSettings);
-							}
+							LanguageLoader loader = project.fileSettings.languageFileType
+								.createLoader(project.fileSettings);
+							
 							Language newLang = new Language(s, loader);
 							newLang.dirty(true);
 							if (!project.languages.containsKey(s))
@@ -471,22 +463,23 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	{
 		gui.if_(gui ->
 		{
-			JFileChooser	chooser	= new JFileChooser();
-			FileFilter		filter	= new FileFilter()
-									{
-										@Override
-										public String getDescription()
-										{
-											return "";
-										}
-										
-										@Override
-										public boolean accept(File f)
-										{
-											return f.getPath().endsWith(ProjectConfig.PROJECT_FILE_NAME)
-													|| f.isDirectory();
-										}
-									};
+			JFileChooser chooser = new JFileChooser();
+			
+			FileFilter filter = new FileFilter()
+			{
+				@Override
+				public String getDescription()
+				{
+					return ProjectConfig.PROJECT_FILE_NAME;
+				}
+				
+				@Override
+				public boolean accept(File f)
+				{
+					return f.getPath().endsWith(ProjectConfig.PROJECT_FILE_NAME)
+							|| f.isDirectory();
+				}
+			};
 			chooser.setFileFilter(filter);
 			int resultCode = chooser.showDialog(gui, l10n.localize("FileBrowser.open"));
 			if (resultCode == JFileChooser.APPROVE_OPTION)
@@ -528,21 +521,14 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 						gui.mnLanguage.setEnabled(true);
 						gui.mntmDelete.setEnabled(true);
 						
-						Language fallbackLang = null;
-						if (project.fallback != null)
-						{
-							fallbackLang = project.languages.get(project.fallback);
-						}
-						gui.comboBoxFallback.setSelectedItem(fallbackLang);
+						gui.comboBoxFallback.setSelectedItem(
+							Opt.of(project.fallback)
+								.map(project.languages::get)
+								.get(() -> null));
 						
-						Language	selectedLang		= null;
-						boolean		hasLanguageSelected	= true;
-						if (hasLanguageSelected)
-						{
-							selectedLang = project.languages.get(project.selectedLanguage);
-						}
-						gui.txtAddKey.setEnabled(hasLanguageSelected);
-						gui.btnAddKey.setEnabled(hasLanguageSelected);
+						Language selectedLang = project.languages.get(project.selectedLanguage);
+						gui.txtAddKey.setEnabled(true);
+						gui.btnAddKey.setEnabled(true);
 						gui.mntmSaveProject.setEnabled(true);
 						
 						gui.comboBoxLanguage.setSelectedItem(selectedLang);
@@ -553,10 +539,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 					}
 					
 					this.setLoadingProject(false);
-					this.doIfNotLoadingProject(() ->
-					{
-						gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-					});
+					this.doIfNotLoadingProject(() -> gui.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)));
 					
 					synchronized (lockProject)
 					{

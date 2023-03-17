@@ -29,11 +29,13 @@
                 	System.jar
                 	JavaLexer.jar
                 	SwingUtils.jar
+                	gson-2.10.1.jar
                 	"/>
             	<attribute name="Add-Opens" value="java.desktop/sun.awt.X11"/>
             </manifest>
             <zipfileset src="dep/jar-in-jar-loader.zip"/>
         	<zipfileset dir="./dep" includes="commons-text-1.9.jar"/>
+        	<zipfileset dir="./dep" includes="gson-2.10.1.jar"/>
             <fileset dir="./bin"/>
         	<zipfileset dir="${ws.mathUtils}/target" includes="math_utils-1.0.0.jar"/>
             <zipfileset dir="${ws.ArgsManager}/build" includes="ArgsManager.jar"/>

@@ -5,12 +5,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Window;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -24,7 +23,10 @@ import javax.swing.border.TitledBorder;
 
 import de.tinycodecrank.i18n.Localizer;
 import de.tinycodecrank.l4j.config.ProjectConfig;
+import de.tinycodecrank.l4j.prefs.FileType;
+import de.tinycodecrank.l4j.prefs.FileType.LocalizingFileType;
 import de.tinycodecrank.l4j.startup.Localizer4J;
+import de.tinycodecrank.l4j.util.UpdateableComboBoxModel;
 import de.tinycodecrank.l4j.util.ObservableLangDialog;
 import de.tinycodecrank.util.swing.ApplyAbortPanel;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
@@ -32,25 +34,32 @@ import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 @SuppressWarnings("serial")
 public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfig, Void>
 {
-	private static final String languageTitleBorderText = "New Project.titleBorder.languages";
-	private static final String sourcesTitleBorderText = "New Project.titleBorder.sources";
-	private static final String buttonAccept = "New Project.button.accept";
-	private static final String buttonCancel = "New Project.button.cancle";
+	private static final String	languageTitleBorderText	= "New Project.titleBorder.languages";
+	private static final String	sourcesTitleBorderText	= "New Project.titleBorder.sources";
+	private static final String	buttonAccept			= "New Project.button.accept";
+	private static final String	buttonCancel			= "New Project.button.cancle";
 	
-	JTextField textProjectLocation;
-	JTextField textLanguageLocation;
-	JTextField textSourceLocation;
+	JTextField	textProjectLocation;
+	JTextField	textLanguageLocation;
+	JTextField	textSourceLocation;
 	
 	ApplyAbortPanel applyAbortPanel;
 	
-	JTextField txtFileextension;
-	JTextField txtDelimiter;
+	JTextField	txtFileextension;
+	JTextField	txtDelimiter;
 	
-	JPanel panel;
-	JComboBox<String> comboBoxFileType;
-	JCheckBox chckbxSaveVersionFile;
+	JPanel							panel;
+	JComboBox<LocalizingFileType>	comboBoxFileType;
+	JCheckBox						chckbxSaveVersionFile;
 	
-	public ProjectGui(Window owner, ModalityType modality, Consumer<GuiCloseEvent<ProjectConfig>> closeListener, Localizer l10n)
+	private final LocalizingFileType[]			fileTypes;
+	private final BiConsumer<String, String>	langChangeListener;
+	
+	public ProjectGui(
+		Window owner,
+		ModalityType modality,
+		Consumer<GuiCloseEvent<ProjectConfig>> closeListener,
+		Localizer l10n)
 	{
 		super(owner, modality, closeListener, l10n);
 		BorderLayout borderLayout = (BorderLayout) getContentPane().getLayout();
@@ -92,9 +101,9 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		Component verticalStrut_1 = Box.createVerticalStrut(15);
 		verticalBox.add(verticalStrut_1);
 		
-		Box horizontalBox_2 = Box.createHorizontalBox();
-		TitledBorder languageTitleBorder = BorderFactory.createTitledBorder(languageTitleBorderText);
-		reg(languageTitleBorderText , languageTitleBorder::setTitle);
+		Box				horizontalBox_2		= Box.createHorizontalBox();
+		TitledBorder	languageTitleBorder	= BorderFactory.createTitledBorder(languageTitleBorderText);
+		reg(languageTitleBorderText, languageTitleBorder::setTitle);
 		horizontalBox_2.setBorder(languageTitleBorder);
 		verticalBox.add(horizontalBox_2);
 		
@@ -108,12 +117,15 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		reg("New Project.label.File type", lblFileType::setText);
 		horizontalBox_4.add(lblFileType);
 		
-		comboBoxFileType = new JComboBox<>();
-		ComboBoxModel<String> cbModel = new DefaultComboBoxModel<>(new String[] {"Properties", "Lang"});
-		comboBoxFileType.setModel(cbModel);
-		comboBoxFileType.setSelectedIndex(Localizer4J.prefs.fileSettings.usePropertyFiles ? 0 : 1);
+		comboBoxFileType	= new JComboBox<>();
+		fileTypes			= FileType.localized(langManager);
+		final var typesModel = new UpdateableComboBoxModel<>(fileTypes);
+		comboBoxFileType.setModel(typesModel);
+		comboBoxFileType.setSelectedItem(FileType.match(Localizer4J.prefs.fileSettings.languageFileType, fileTypes));
+		langChangeListener = (s1, s2) -> typesModel.fireChange();
+		l10n.addLanguageChangeListener(langChangeListener);
 		comboBoxFileType.setMaximumSize(new Dimension(32767, 32));
-		businessLogic.if_(bl-> comboBoxFileType.addActionListener(bl::fileTypeChanged));
+		businessLogic.if_(bl -> comboBoxFileType.addActionListener(bl::fileTypeChanged));
 		horizontalBox_4.add(comboBoxFileType);
 		
 		Component verticalStrut = Box.createVerticalStrut(5);
@@ -187,8 +199,8 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		chckbxSaveVersionFile.setHorizontalAlignment(SwingConstants.RIGHT);
 		businessLogic.if_(bl -> btnBrowse_1.addActionListener(bl::selectLangFiles));
 		
-		Box horizontalBox_3 = Box.createHorizontalBox();
-		TitledBorder sourceTitledBorder = BorderFactory.createTitledBorder(sourcesTitleBorderText);
+		Box				horizontalBox_3		= Box.createHorizontalBox();
+		TitledBorder	sourceTitledBorder	= BorderFactory.createTitledBorder(sourcesTitleBorderText);
 		reg(sourcesTitleBorderText, sourceTitledBorder::setTitle);
 		horizontalBox_3.setBorder(sourceTitledBorder);
 		verticalBox.add(horizontalBox_3);
@@ -216,14 +228,21 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 			reg(buttonCancel, applyAbortPanel.btnButton2::setText);
 			getContentPane().add(applyAbortPanel, BorderLayout.SOUTH);
 			applyAbortPanel.btnButton1.setEnabled(false);
-		});	
+		});
 		
 		setVisible(true);
 	}
-
+	
 	@Override
 	protected BusinessLogic createBusinessLogic(Void args)
 	{
 		return new BusinessLogic(this);
+	}
+	
+	@Override
+	public void disposeAction()
+	{
+		langManager.localizer.removeLanguageChangeListener(langChangeListener);
+		super.disposeAction();
 	}
 }

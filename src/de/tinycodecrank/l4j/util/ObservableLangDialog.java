@@ -11,7 +11,7 @@ import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 @SuppressWarnings("serial")
 public abstract class ObservableLangDialog<Logic extends DialogLogicTemplate<?, Args>, R, Args> extends ObservableDialog<Logic, R, Args>
 {
-	private final LangManager langManager;
+	protected final LangManager langManager;
 	
 	public ObservableLangDialog(
 		Window owner,

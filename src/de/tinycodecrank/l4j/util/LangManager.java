@@ -9,8 +9,8 @@ import de.tinycodecrank.i18n.Localizer;
 
 public class LangManager implements AutoCloseable
 {
-	private final HashSet<Localization> localizations = new HashSet<>();
-	public final Localizer localizer;
+	private final HashSet<Localization>	localizations	= new HashSet<>();
+	public final Localizer				localizer;
 	
 	public LangManager(Localizer localizer)
 	{
@@ -18,10 +18,10 @@ public class LangManager implements AutoCloseable
 	}
 	
 	@SafeVarargs
-	public final void reg(String key, Consumer<String> ... listener)
+	public final void reg(String key, Consumer<String>... listener)
 	{
-		String translation = localizer.localize(key);
-		if(!translation.isEmpty())
+		final String translation = localizer.localize(key);
+		if (!translation.isEmpty())
 		{
 			localizations.add(localizer.get(key, listener));
 		}
@@ -29,6 +29,14 @@ public class LangManager implements AutoCloseable
 		{
 			Arrays.stream(listener).forEach(l -> l.accept(null));
 		}
+	}
+	
+	@SafeVarargs
+	public final Localization get(String key, Consumer<String>... listener)
+	{
+		final var translation = localizer.get(key, listener);
+		localizations.add(translation);
+		return translation;
 	}
 	
 	@Override

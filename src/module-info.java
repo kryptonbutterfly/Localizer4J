@@ -31,4 +31,6 @@ module de.tinycodecrank.Localizer4J
 	requires de.tinycodecrank.mathUtils;
 	requires org.apache.commons.text;
 	requires de.tinycodecrank.JavaLexer;
+	requires com.google.gson;
+	requires de.tinycodecrank.Functional;
 }

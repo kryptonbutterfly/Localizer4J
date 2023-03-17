@@ -3,6 +3,7 @@ package de.tinycodecrank.l4j.ui.settings;
 import java.awt.event.ActionEvent;
 
 import de.tinycodecrank.l4j.prefs.FileSettings;
+import de.tinycodecrank.l4j.prefs.FileType.LocalizingFileType;
 import de.tinycodecrank.l4j.startup.Localizer4J;
 import de.tinycodecrank.util.swing.DialogLogicTemplate;
 
@@ -20,6 +21,8 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 	{
 		gui.if_(gui ->
 		{
+			gui.panelSettingsLang
+				.setVisible(((LocalizingFileType) gui.comboBoxFileType.getSelectedItem()).type().varExtension());
 			final int fileType = gui.comboBoxFileType.getSelectedIndex();
 			switch (fileType)
 			{
@@ -54,7 +57,7 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 				langFileExtension = "." + langFileExtension;
 			}
 			
-			fileSettings.usePropertyFiles		= gui.comboBoxFileType.getSelectedIndex() == 0;
+			fileSettings.languageFileType		= ((LocalizingFileType) gui.comboBoxFileType.getSelectedItem()).type();
 			fileSettings.langFileExtension		= langFileExtension;
 			fileSettings.localizationDelimiter	= gui.textField_1.getText().trim();
 			fileSettings.versionListFile		= gui.chckbxSaveVersionFile.isSelected();

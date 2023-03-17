@@ -78,5 +78,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="dep/gson-2.10.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Localizer4J/dep/gson-2.10.1-javadoc.jar!/"/>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

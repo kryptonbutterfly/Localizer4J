@@ -19,11 +19,12 @@ import de.tinycodecrank.java.lexer.tokens.CharLiteral;
 import de.tinycodecrank.java.lexer.tokens.Comment;
 import de.tinycodecrank.java.lexer.tokens.Section;
 import de.tinycodecrank.java.lexer.tokens.StringLiteral;
-import de.tinycodecrank.l4j.config.ProjectConfig;
 import de.tinycodecrank.l4j.data.index.ProjectStringsIndex;
+import de.tinycodecrank.l4j.prefs.FileSettings;
 import de.tinycodecrank.l4j.startup.Localizer4J;
+import de.tinycodecrank.l4j.util.Constants;
 
-public class ProjectReader
+public class ProjectReader implements Constants
 {
 	private static final Lexer LEXER = new Lexer();
 	
@@ -232,19 +233,12 @@ public class ProjectReader
 				|| section instanceof StringLiteral;
 	}
 	
-	public static ArrayList<File> findMiscFiles(File path, ProjectConfig config)
+	public static ArrayList<File> findMiscFiles(File path, FileSettings settings)
 	{
 		try
 		{
-			FileExclusionVisitor visitor;
-			if (config.fileSettings.usePropertyFiles)
-			{
-				visitor = new FileExclusionVisitor(path.toString(), ".properties", ".java");
-			}
-			else
-			{
-				visitor = new FileExclusionVisitor(path.toString(), config.fileSettings.langFileExtension, ".java");
-			}
+			final var	extension	= settings.languageFileType.extension(settings);
+			final var	visitor		= new FileExclusionVisitor(path.toString(), extension, JAVA_SOURCE_EXTENSION);
 			Files.walkFileTree(path.toPath(), visitor);
 			return visitor.results;
 		}
@@ -256,23 +250,6 @@ public class ProjectReader
 	
 	public static ArrayList<File> findMiscFiles(String path)
 	{
-		try
-		{
-			FileExclusionVisitor visitor;
-			if (Localizer4J.prefs.fileSettings.usePropertyFiles)
-			{
-				visitor = new FileExclusionVisitor(path, ".properties", ".java");
-			}
-			else
-			{
-				visitor = new FileExclusionVisitor(path, Localizer4J.prefs.fileSettings.langFileExtension, ".java");
-			}
-			Files.walkFileTree(Paths.get(path), visitor);
-			return visitor.results;
-		}
-		catch (IOException e)
-		{
-			return null;
-		}
+		return findMiscFiles(new File(path), Localizer4J.prefs.fileSettings);
 	}
 }

@@ -17,6 +17,7 @@
             <localizationDelimiter value="="/>
             <langFileExtension value=".lang"/>
             <usePropertyFiles value="false"/>
+            <languageFileType info="LANG" value="1"/>
             <versionListFile value="true"/>
         </fileSettings>
     </config>

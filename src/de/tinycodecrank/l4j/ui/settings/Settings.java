@@ -4,9 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Window;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -21,9 +21,12 @@ import javax.swing.border.EmptyBorder;
 
 import de.tinycodecrank.i18n.Localizer;
 import de.tinycodecrank.l4j.prefs.FileSettings;
+import de.tinycodecrank.l4j.prefs.FileType;
+import de.tinycodecrank.l4j.prefs.FileType.LocalizingFileType;
 import de.tinycodecrank.l4j.prefs.GuiPrefs;
 import de.tinycodecrank.l4j.startup.Localizer4J;
 import de.tinycodecrank.l4j.util.ObservableLangDialog;
+import de.tinycodecrank.l4j.util.UpdateableComboBoxModel;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 
 @SuppressWarnings("serial")
@@ -31,14 +34,17 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 {
 	private final FileSettings guiPrefs;
 	
-	private JPanel		contentPane;
-	JTextField			textField;
-	JTextField			textField_1;
-	JPanel				panelSettingsLang;
-	JComboBox<String>	comboBoxFileType;
-	JSpinner			spinnerHistoryLength;
-	JCheckBox			chckbxSaveVersionFile;
-	JComboBox<String>	comboBoxUiLanguage;
+	private JPanel					contentPane;
+	JTextField						textField;
+	JTextField						textField_1;
+	JPanel							panelSettingsLang;
+	JComboBox<LocalizingFileType>	comboBoxFileType;
+	JSpinner						spinnerHistoryLength;
+	JCheckBox						chckbxSaveVersionFile;
+	JComboBox<String>				comboBoxUiLanguage;
+	
+	private final LocalizingFileType[]			fileTypes;
+	private final BiConsumer<String, String>	langChangeListener;
 	
 	public Settings(
 		Window owner,
@@ -76,9 +82,13 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		reg("Settings.label.File type", lblFileType::setText);
 		panel.add(lblFileType);
 		
-		comboBoxFileType = new JComboBox<>();
-		comboBoxFileType.setModel(new DefaultComboBoxModel<String>(new String[] { "Properties", "Lang" }));
-		comboBoxFileType.setSelectedIndex(fileSettings.usePropertyFiles ? 0 : 1);
+		comboBoxFileType	= new JComboBox<>();
+		fileTypes			= FileType.localized(langManager);
+		final var typesModel = new UpdateableComboBoxModel<>(fileTypes);
+		comboBoxFileType.setModel(typesModel);
+		comboBoxFileType.setSelectedItem(FileType.match(fileSettings.languageFileType, fileTypes));
+		langChangeListener = (s1, s2) -> typesModel.fireChange();
+		l10n.addLanguageChangeListener(langChangeListener);
 		businessLogic.if_(bl -> comboBoxFileType.addActionListener(bl::fileTypeChanged));
 		panel.add(comboBoxFileType);
 		
@@ -94,7 +104,7 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		panelSettingsType.add(separator, BorderLayout.SOUTH);
 		
 		panelSettingsLang = new JPanel();
-		panelSettingsLang.setVisible(!fileSettings.usePropertyFiles);
+		panelSettingsLang.setVisible(fileSettings.languageFileType.varExtension());
 		panelSettings.add(panelSettingsLang, BorderLayout.CENTER);
 		panelSettingsLang.setLayout(new GridLayout(0, 2, 0, 0));
 		
@@ -178,5 +188,12 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 	protected BusinessLogic createBusinessLogic(FileSettings settings)
 	{
 		return new BusinessLogic(this, settings);
+	}
+	
+	@Override
+	public void disposeAction()
+	{
+		langManager.localizer.removeLanguageChangeListener(langChangeListener);
+		super.disposeAction();
 	}
 }
