@@ -63,6 +63,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 	JMenuItem			mnLanguage;
 	private JMenuItem	mntmCreate;
 	JMenuItem			mntmDelete;
+	JMenuItem			mntmImport;
 	private JMenuItem	mntmGeneralSettings;
 	JMenuItem			mntmProjectSettings;
 	JMenuItem			mntmSaveProject;
@@ -169,6 +170,12 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		mntmDelete.setEnabled(false);
 		mnLanguage.add(mntmDelete);
 		businessLogic.if_(bl -> mntmDelete.addActionListener(bl::deleteLanguage));
+		
+		mntmImport = new JMenuItem();
+		reg("Main.Menu.Import", mntmImport::setText);
+		mntmImport.setEnabled(false);
+		mnLanguage.add(mntmImport);
+		businessLogic.if_(bl -> mntmImport.addActionListener(bl::importLanguage));
 		
 		JMenu mnOptions = new JMenu();
 		reg("Main.Menu.Options", mnOptions::setText);
@@ -406,6 +413,11 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		splitOccurences.setDividerLocation(Localizer4J.prefs.layout.occurenceHeight);
 		
 		initialized = true;
+	}
+	
+	Localizer getLocalizer()
+	{
+		return langManager.localizer;
 	}
 	
 	@Override

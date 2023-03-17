@@ -79,15 +79,18 @@ public class ProjectConfig extends FileConfig implements Constants
 		String			extension	= fileType.extension(fileSettings);
 		LanguageLoader	loader		= fileType.createLoader(fileSettings);
 		
-		languageNames.stream().forEach(name ->
-		{
-			final var	file		= new File(langFolder(), name + extension);
-			final var	language	= new Language(file, loader);
-			languages.put(name, language);
-		});
+		languageNames.stream().forEach(name -> loadLanguage(name, extension, loader));
 		
 		if (this.fileSettings.versionListFile)
 			loadVersionFile();
+	}
+	
+	public Language loadLanguage(String name, String extension, LanguageLoader loader)
+	{
+		final var	file		= new File(langFolder(), name + extension);
+		final var	language	= new Language(file, loader);
+		languages.put(name, language);
+		return language;
 	}
 	
 	private void loadVersionFile()

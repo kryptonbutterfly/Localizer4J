@@ -9,6 +9,7 @@ Main.Menu.Create = Erstellen
 Main.Menu.Delete = Löschen
 Main.Menu.File = Datei
 Main.Menu.General Settings = Allgemeine Einstellungen
+Main.Menu.Import = Sprache Importieren
 Main.Menu.Language = Sprache
 Main.Menu.New = Neu
 Main.Menu.Open = Öffnen

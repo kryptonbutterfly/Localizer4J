@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -27,6 +28,7 @@ import de.tinycodecrank.l4j.startup.ProgramArgs;
 import de.tinycodecrank.l4j.ui.lang.LangGui;
 import de.tinycodecrank.l4j.ui.project.ProjectGui;
 import de.tinycodecrank.l4j.ui.settings.Settings;
+import de.tinycodecrank.l4j.util.Sneaky;
 import de.tinycodecrank.l4j.util.StringUtils;
 import de.tinycodecrank.math.utils.limit.LimitInt;
 import de.tinycodecrank.monads.opt.Opt;
@@ -158,12 +160,53 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				if (langCount <= 0)
 				{
 					gui.mntmDelete.setEnabled(false);
+					gui.mntmImport.setEnabled(false);
 					gui.btnAddKey.setEnabled(false);
 					gui.txtAddKey.setEnabled(false);
 					gui.btnRemove.setEnabled(false);
 				}
 			}
 		}));
+	}
+	
+	void importLanguage(ActionEvent ae)
+	{
+		gui.if_(gui ->
+		{
+			project.if_(project ->
+			{
+				final String	extension	= project.fileSettings.languageFileType.extension(project.fileSettings);
+				final File		langFolder	= new File(project.langFolder);
+				JFileChooser	chooser		= new JFileChooser(project.langFolder);
+				chooser.setAcceptAllFileFilterUsed(false);
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setMultiSelectionEnabled(true);
+				
+				FileFilter filter = new FileFilter()
+				{
+					@Override
+					public String getDescription()
+					{
+						return extension;
+					}
+					
+					@Override
+					public boolean accept(File f)
+					{
+						return Sneaky.sneaky(() ->
+						{
+							final String	fileFolder		= f.getParentFile().getCanonicalPath();
+							final String	langDirectory	= langFolder.getCanonicalPath();
+							return f.getPath().endsWith(extension) && fileFolder.equals(langDirectory);
+						});
+					}
+				};
+				chooser.setFileFilter(filter);
+				int resultCode = chooser.showDialog(gui, l10n.localize("FileBrowser.open"));
+				if (resultCode == JFileChooser.APPROVE_OPTION)
+					importFiles(gui, project, chooser.getSelectedFiles());
+			});
+		});
 	}
 	
 	void showProjectOptions(ActionEvent ae)
@@ -489,6 +532,34 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		});
 	}
 	
+	private void importFiles(MainGui gui, ProjectConfig project, File[] files)
+	{
+		System.out.println("importing " + files.length + " files.");
+		Arrays.stream(files)
+			.filter(f -> !project.languages.containsKey(f.getName()))
+			.forEach(f ->
+			{
+				new Thread(() ->
+				{
+					final var selected	= (Language) gui.comboBoxLanguage.getSelectedItem();
+					final var fallback	= (Language) gui.comboBoxFallback.getSelectedItem();
+					
+					final var langName		= f.getName().substring(0, f.getName().indexOf('.'));
+					final var fileSettings	= project.fileSettings;
+					final var loader		= fileSettings.languageFileType.createLoader(fileSettings);
+					final var extension		= project.fileSettings.languageFileType.extension(project.fileSettings);
+					
+					final var language = project.loadLanguage(langName, extension, loader);
+					
+					gui.comboBoxLanguage.addItem(language);
+					gui.comboBoxFallback.addItem(language);
+					
+					gui.comboBoxLanguage.setSelectedItem(selected);
+					gui.comboBoxFallback.setSelectedItem(fallback);
+				}).start();
+			});
+	}
+	
 	void openProject(File projectFile)
 	{
 		gui.if_(gui ->
@@ -520,6 +591,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 						gui.comboBoxFallback.setEnabled(true);
 						gui.mnLanguage.setEnabled(true);
 						gui.mntmDelete.setEnabled(true);
+						gui.mntmImport.setEnabled(true);
 						
 						gui.comboBoxFallback.setSelectedItem(
 							Opt.of(project.fallback)

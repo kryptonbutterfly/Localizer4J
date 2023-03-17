@@ -9,6 +9,7 @@ Main.Menu.Create = Create
 Main.Menu.Delete = Delete
 Main.Menu.File = File
 Main.Menu.General Settings = General Settings
+Main.Menu.Import = Import Language
 Main.Menu.Language = Language
 Main.Menu.New = New
 Main.Menu.Open = Open
