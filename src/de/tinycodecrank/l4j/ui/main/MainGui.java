@@ -51,13 +51,13 @@ import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 @SuppressWarnings("serial")
 public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 {
-	private final String	countTitle		= "Main.table.count";
-	private final String	identifierTitle	= "Main.table.identifier";
+	private static final String	countTitle		= "Main.table.count";
+	private static final String	identifierTitle	= "Main.table.identifier";
 	
-	private final String	lineTitle	= "Main.table.Line";
-	private final String	classTitle	= "Main.table.Class";
-	private final String	fileTitle	= "Main.table.File";
-	private final String	textTitle	= "Main.table.Text";
+	private static final String	lineTitle	= "Main.table.Line";
+	private static final String	classTitle	= "Main.table.Class";
+	private static final String	fileTitle	= "Main.table.File";
+	private static final String	textTitle	= "Main.table.Text";
 	
 	JMenu				mnOpenRecent;
 	JMenuItem			mnLanguage;
@@ -136,11 +136,13 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		
 		JMenuItem mntmNewProject = new JMenuItem();
 		reg("Main.Menu.New", mntmNewProject::setText);
+		mntmNewProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mntmNewProject);
 		businessLogic.if_(bl -> mntmNewProject.addActionListener(bl::newProject));
 		
 		JMenuItem mntmOpenProject = new JMenuItem();
 		reg("Main.Menu.Open", mntmOpenProject::setText);
+		mntmOpenProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
 		mnFile.add(mntmOpenProject);
 		businessLogic.if_(bl -> mntmOpenProject.addActionListener(bl::openProject));
 		
@@ -150,6 +152,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		
 		mntmSaveProject = new JMenuItem();
 		reg("Main.Menu.Save", mntmSaveProject::setText);
+		mntmSaveProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
 		mntmSaveProject.setEnabled(false);
 		mnFile.add(mntmSaveProject);
 		businessLogic.if_(bl -> mntmSaveProject.addActionListener(bl::saveProject));
