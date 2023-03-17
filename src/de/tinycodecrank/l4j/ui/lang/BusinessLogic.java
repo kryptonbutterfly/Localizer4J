@@ -17,7 +17,7 @@ final class BusinessLogic extends DialogLogicTemplate<LangGui, Void>
 	
 	void add(ActionEvent ae)
 	{
-		gui.if_(gui->
+		gui.if_(gui ->
 		{
 			gui.dispose(new GuiCloseEvent<String>(Result.SUCCESS, Opt.empty(), gui.txtLang.getText()));
 		});
@@ -31,10 +31,10 @@ final class BusinessLogic extends DialogLogicTemplate<LangGui, Void>
 	@Override
 	protected void disposeAction()
 	{
-		gui.if_(gui->
+		gui.if_(gui ->
 		{
-			Localizer4J.prefs.newLangWindow.posX = gui.getX();
-			Localizer4J.prefs.newLangWindow.posX = gui.getY();
+			Localizer4J.prefs.newLangWindow.posX	= gui.getX();
+			Localizer4J.prefs.newLangWindow.posY	= gui.getY();
 		});
 	}
 }
