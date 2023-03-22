@@ -3,9 +3,9 @@ package de.tinycodecrank.l4j.ui.main;
 import java.awt.Cursor;
 import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,6 +28,8 @@ import de.tinycodecrank.l4j.startup.ProgramArgs;
 import de.tinycodecrank.l4j.ui.lang.LangGui;
 import de.tinycodecrank.l4j.ui.project.ProjectGui;
 import de.tinycodecrank.l4j.ui.settings.Settings;
+import de.tinycodecrank.l4j.util.KeyEventListener;
+import de.tinycodecrank.l4j.util.KeyEventType;
 import de.tinycodecrank.l4j.util.Sneaky;
 import de.tinycodecrank.l4j.util.StringUtils;
 import de.tinycodecrank.math.utils.limit.LimitInt;
@@ -221,40 +223,53 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		{}, Localizer4J.prefs.fileSettings, l10n));
 	}
 	
+	KeyListener changeTranslation()
+	{
+		return KeyEventListener.create(
+			KeyEventType.PRESSED,
+			KeyEvent.CTRL_DOWN_MASK,
+			e ->
+			{
+				changeTranslation(null);
+				return true;
+			},
+			KeyEvent.VK_ENTER);
+	}
+	
 	void changeTranslation(ActionEvent ae)
 	{
 		gui.if_(gui -> project.if_(project ->
 		{
 			int selection = gui.table.getSelectedRow();
-			if (selection >= 0)
+			if (selection < 0)
+				return;
+			
+			Language		lang			= (Language) gui.comboBoxLanguage.getSelectedItem();
+			Translatable	translatable	= gui.tableModel.getTranslatable(selection);
+			if (translatable instanceof Translation)
 			{
-				Language		lang			= (Language) gui.comboBoxLanguage.getSelectedItem();
-				Translatable	translatable	= gui.tableModel.getTranslatable(selection);
-				if (translatable instanceof Translation)
+				String		newValue	= gui.txtTranslation.getText();
+				Translation	translation	= (Translation) translatable;
+				if (!newValue.equals(translation.getTranslation()))
 				{
-					String		newValue	= gui.txtTranslation.getText();
-					Translation	translation	= (Translation) translatable;
-					if (!newValue.equals(translation.getTranslation()))
-					{
-						translation.setTranslation(gui.txtTranslation.getText());
-						lang.dirty(true);
-					}
+					translation.setTranslation(gui.txtTranslation.getText());
+					lang.dirty(true);
+				}
+			}
+			else
+			{
+				Translation translation = new Translation(translatable.getKey(), gui.txtTranslation.getText());
+				lang.dirty(true);
+				lang.translations.add(translation);
+				if (project.sources.containsKey(translatable.getKey()))
+				{
+					translation.setTranslationState(TranslationState.TRANSLATED);
 				}
 				else
 				{
-					Translation translation = new Translation(translatable.getKey(), gui.txtTranslation.getText());
-					lang.dirty(true);
-					lang.translations.add(translation);
-					if (project.sources.containsKey(translatable.getKey()))
-					{
-						translation.setTranslationState(TranslationState.TRANSLATED);
-					}
-					else
-					{
-						translation.setTranslationState(TranslationState.TRANSLATED_UNUSED);
-					}
-					gui.tableModel.recalculate();
+					translation.setTranslationState(TranslationState.TRANSLATED_UNUSED);
 				}
+				gui.tableModel.recalculate();
 			}
 		}));
 	}
@@ -339,12 +354,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			
 			gui.tableModel.setLanguage(selected);
 			gui.tableModel.recalculate();
-			selectedTranslation.if_(t ->
-			{
-				int target = gui.tableModel.find(t.getKey());
-				gui.table.getSelectionModel().addSelectionInterval(target, target);
-				setSelection(target);
-			});
+			selectedTranslation.if_(t -> setSelection(t.getKey()));
 		}));
 	}
 	
@@ -656,11 +666,25 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		}));
 	}
 	
+	KeyListener addKey()
+	{
+		return KeyEventListener.create(
+			KeyEventType.PRESSED,
+			e ->
+			{
+				addKey(null);
+				return true;
+			},
+			KeyEvent.VK_ENTER,
+			KeyEvent.VK_ACCEPT);
+	}
+	
 	void addKey(ActionEvent ae)
 	{
 		gui.if_(gui -> project.if_(project ->
 		{
 			String key = gui.txtAddKey.getText();
+			gui.txtAddKey.setText("");
 			if (StringUtils.isNotBlank(key))
 			{
 				Language lang = (Language) gui.comboBoxLanguage.getSelectedItem();
@@ -670,20 +694,25 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 					lang.translations.add(translatable);
 					lang.dirty(true);
 					gui.tableModel.recalculate();
+					setSelection(key);
 				}
 			}
 		}));
 	}
 	
-	private void setSelection(int selection)
+	private void setSelection(String selection)
 	{
 		gui.if_(gui ->
 		{
-			JViewport	viewport	= (JViewport) gui.table.getParent();
-			Rectangle	rect		= gui.table.getCellRect(selection, 1, true);
-			Point		offset		= viewport.getViewPosition();
-			int			x			= rect.x - offset.x;
-			int			y			= rect.y - offset.y;
+			final int target = gui.tableModel.find(selection);
+			if (target == -1)
+				return;
+			gui.table.setRowSelectionInterval(target, target);
+			final var	viewport	= (JViewport) gui.table.getParent();
+			final var	rect		= gui.table.getCellRect(target, 1, true);
+			final var	offset		= viewport.getViewPosition();
+			final int	x			= rect.x - offset.x;
+			final int	y			= rect.y - offset.y;
 			rect.setLocation(x, y);
 			gui.table.scrollRectToVisible(rect);
 		});

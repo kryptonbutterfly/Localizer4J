@@ -79,9 +79,10 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 	TableModelMisc		tableModelMisc		= new TableModelMisc(new String[] { lineTitle, fileTitle, textTitle });
 	FilterTableModel	tableModel			= null;
 	
-	JTable	tableClasses;
-	JTable	tableMisc;
-	JTable	table;
+	JTable		tableClasses;
+	JTable		tableMisc;
+	JTable		table;
+	JScrollPane	tableScrollPane;
 	
 	JTextArea	txtAddKey;
 	JButton		btnAddKey;
@@ -252,9 +253,9 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		initTable(table, l10n);
 		businessLogic.if_(bl -> table.getSelectionModel().addListSelectionListener(bl::tableSelectionListener));
 		
-		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setAutoscrolls(true);
-		panelTable.add(scrollPane);
+		tableScrollPane = new JScrollPane(table);
+		tableScrollPane.setAutoscrolls(true);
+		panelTable.add(tableScrollPane);
 		panelTable.setMinimumSize(new Dimension(200, 10));
 		
 		JPanel panelAddKey = new JPanel();
@@ -263,6 +264,8 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		txtAddKey.setWrapStyleWord(true);
 		txtAddKey.setTabSize(10);
 		txtAddKey.setEnabled(false);
+		businessLogic.if_(bl -> txtAddKey.addKeyListener(bl.addKey()));
+		
 		btnAddKey = new JButton();
 		reg("Main.button.add", btnAddKey::setText);
 		btnAddKey.setEnabled(false);
@@ -368,6 +371,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 				btnApply.setEnabled(true);
 			}
 		});
+		businessLogic.if_(bl -> txtTranslation.addKeyListener(bl.changeTranslation()));
 		
 		txtTranslationFallback = new JTextArea();
 		txtTranslationFallback.setWrapStyleWord(true);
@@ -396,8 +400,6 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		JPanel panel_2 = new JPanel();
 		vertBox.add(panel_2);
 		((FlowLayout) panel_2.getLayout()).setAlignment(FlowLayout.TRAILING);
-		
-		// TODO add capability to add new key
 		
 		btnRemove = new JButton();
 		reg("Main.button.remove", btnRemove::setText);
