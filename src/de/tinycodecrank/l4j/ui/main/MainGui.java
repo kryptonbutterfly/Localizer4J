@@ -90,6 +90,8 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 	JTextArea	txtTranslation;
 	JTextArea	txtTranslationFallback;
 	
+	JButton btnSwap;
+	
 	JButton		btnApply;
 	JSplitPane	splitPane;
 	JSplitPane	splitPaneValue;
@@ -230,6 +232,15 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		comboBoxLanguage.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		businessLogic.if_(bl -> comboBoxLanguage.addActionListener(bl::selectLanguage));
 		horizontalBox.add(comboBoxLanguage);
+		
+		horizontalBox.add(Box.createHorizontalStrut(10));
+		btnSwap = new JButton();
+		reg("Main.button.swapLanguages", btnSwap::setText);
+		reg("Main.button.swapLanguages_tooltip", btnSwap::setToolTipText);
+		btnSwap.setEnabled(false);
+		businessLogic.if_(bl -> btnSwap.addActionListener(bl::swapLanguages));
+		horizontalBox.add(btnSwap);
+		horizontalBox.add(Box.createHorizontalStrut(10));
 		
 		JLabel lblFallback = new JLabel();
 		reg("Main.label.Fallback", lblFallback::setText);

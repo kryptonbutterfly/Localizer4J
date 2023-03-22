@@ -128,6 +128,8 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 								gui.comboBoxLanguage.addItem(newLang);
 								gui.comboBoxFallback.addItem(newLang);
 							}
+							
+							updateSwapButton(gui);
 						}),
 					l10n)));
 	}
@@ -168,6 +170,8 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 					gui.btnRemove.setEnabled(false);
 				}
 			}
+			
+			updateSwapButton(gui);
 		}));
 	}
 	
@@ -207,6 +211,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				int resultCode = chooser.showDialog(gui, l10n.localize("FileBrowser.open"));
 				if (resultCode == JFileChooser.APPROVE_OPTION)
 					importFiles(gui, project, chooser.getSelectedFiles());
+				updateSwapButton(gui);
 			});
 		});
 	}
@@ -323,6 +328,47 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		}));
 	}
 	
+	void swapLanguages(ActionEvent ae)
+	{
+		gui.if_(gui -> project.if_(project ->
+		{
+			final var	lang		= (Language) gui.comboBoxLanguage.getSelectedItem();
+			final var	fallBack	= (Language) gui.comboBoxFallback.getSelectedItem();
+			
+			if (lang == null || fallBack == null)
+			{
+				System.err.println(
+					"ILLEGAL: Attempted to swap languages, even though one was not selected. The swap button must be disabled in that case!");
+				return;
+			}
+			if (lang == fallBack)
+				return; // Nothing to do here since a swap has no effect!
+				
+			gui.btnApply.setEnabled(false);
+			gui.btnRemove.setEnabled(false);
+			
+			final var selection = Opt.of(gui.tableModel.getTranslatable(gui.table.getSelectedRow()))
+				.map(Translatable::getKey);
+			
+			gui.table.getSelectionModel().setSelectionInterval(0, -1);
+			gui.txtTranslation.setText("");
+			gui.txtTranslationFallback.setText("");
+			
+			project.selectedLanguage	= fallBack.getName();
+			project.fallback			= lang.getName();
+			
+			gui.btnAddKey.setEnabled(true);
+			gui.txtAddKey.setEnabled(true);
+			
+			gui.comboBoxLanguage.setSelectedItem(fallBack);
+			gui.comboBoxFallback.setSelectedItem(lang);
+			
+			gui.tableModel.setLanguage(fallBack);
+			gui.tableModel.recalculate();
+			selection.if_(key -> setSelection(key));
+		}));
+	}
+	
 	void selectLanguage(ActionEvent ae)
 	{
 		gui.if_(gui -> project.if_(project ->
@@ -355,6 +401,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			gui.tableModel.setLanguage(selected);
 			gui.tableModel.recalculate();
 			selectedTranslation.if_(t -> setSelection(t.getKey()));
+			updateSwapButton(gui);
 		}));
 	}
 	
@@ -389,6 +436,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			{
 				project.fallback = null;
 			}
+			updateSwapButton(gui);
 		}));
 	}
 	
@@ -508,6 +556,8 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				gui.txtTranslationFallback.setText("");
 				
 				gui.mntmProjectSettings.setEnabled(true);
+				
+				updateSwapButton(gui);
 			});
 		});
 	}
@@ -564,8 +614,10 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 					gui.comboBoxLanguage.addItem(language);
 					gui.comboBoxFallback.addItem(language);
 					
-					gui.comboBoxLanguage.setSelectedItem(selected);
-					gui.comboBoxFallback.setSelectedItem(fallback);
+					if (selected != null)
+						gui.comboBoxLanguage.setSelectedItem(selected);
+					if (fallback != null)
+						gui.comboBoxFallback.setSelectedItem(fallback);
 				}).start();
 			});
 	}
@@ -632,6 +684,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 					addRecent(project.getProjectFile());
 				});
 				this.project = loadingProject;
+				updateSwapButton(gui);
 			}).start();
 		});
 	}
@@ -698,6 +751,12 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				}
 			}
 		}));
+	}
+	
+	private static void updateSwapButton(MainGui gui)
+	{
+		gui.btnSwap.setEnabled(
+			gui.comboBoxLanguage.getSelectedItem() != null && gui.comboBoxFallback.getSelectedItem() != null);
 	}
 	
 	private void setSelection(String selection)
