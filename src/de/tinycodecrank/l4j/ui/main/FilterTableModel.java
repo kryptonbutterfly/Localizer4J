@@ -1,6 +1,7 @@
 package de.tinycodecrank.l4j.ui.main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -40,7 +41,7 @@ public class FilterTableModel extends AbstractTableModel
 	
 	public FilterTableModel(String[] header, Predicate<Translatable> filter)
 	{
-		this.header	= header;
+		this.header	= Arrays.copyOf(header, header.length);
 		this.filter	= filter;
 	}
 	
@@ -354,7 +355,7 @@ public class FilterTableModel extends AbstractTableModel
 		{
 			Set<Index>	sourceOcc	= sources.getOccurences(t.getKey());
 			Set<Index>	miscOcc		= miscContent.getOccurences(t.getKey());
-			if (sourceOcc != null && sourceOcc.size() >= 0 || miscOcc != null && miscOcc.size() >= 0)
+			if (sourceOcc != null && sourceOcc.size() > 0 || miscOcc != null && miscOcc.size() > 0)
 			{
 				if (TranslationState.TRANSLATED_UNUSED == t.getTranslationState())
 				{

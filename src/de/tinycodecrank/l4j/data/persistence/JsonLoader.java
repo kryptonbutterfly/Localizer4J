@@ -34,7 +34,7 @@ public class JsonLoader implements LanguageLoader, Constants
 	@Override
 	public void save(Language language, File folder)
 	{
-		final var					file	= new File(folder, language.getName() + ".json");
+		final var					file	= compute(language, folder);
 		final var<String, String>	mapping	= new HashMap<String, String>();
 		
 		for (Translation entry : language.translations)
@@ -57,10 +57,8 @@ public class JsonLoader implements LanguageLoader, Constants
 	}
 	
 	@Override
-	public void delete(Language language, File folder)
+	public String fileExtension()
 	{
-		final var delFile = new File(folder, language.getName());
-		if (delFile.exists())
-			delFile.delete();
+		return JSON_EXTENSION;
 	}
 }

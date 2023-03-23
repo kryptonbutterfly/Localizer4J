@@ -49,12 +49,13 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 	
 	void buttonOK(ActionEvent event)
 	{
+		final String DOT = ".";
 		gui.if_(gui ->
 		{
 			String langFileExtension = gui.textField.getText().trim();
-			if (!langFileExtension.startsWith("."))
+			if (!langFileExtension.startsWith(DOT))
 			{
-				langFileExtension = "." + langFileExtension;
+				langFileExtension = DOT + langFileExtension;
 			}
 			
 			fileSettings.languageFileType		= ((LocalizingFileType) gui.comboBoxFileType.getSelectedItem()).type();

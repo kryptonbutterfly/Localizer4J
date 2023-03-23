@@ -26,8 +26,9 @@ import de.tinycodecrank.l4j.config.ProjectConfig;
 import de.tinycodecrank.l4j.prefs.FileType;
 import de.tinycodecrank.l4j.prefs.FileType.LocalizingFileType;
 import de.tinycodecrank.l4j.startup.Localizer4J;
-import de.tinycodecrank.l4j.util.UpdateableComboBoxModel;
+import de.tinycodecrank.l4j.util.Constants;
 import de.tinycodecrank.l4j.util.ObservableLangDialog;
+import de.tinycodecrank.l4j.util.UpdateableComboBoxModel;
 import de.tinycodecrank.util.swing.ApplyAbortPanel;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 
@@ -142,7 +143,7 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		panel.add(lblFileExtension);
 		
 		txtFileextension = new JTextField();
-		txtFileextension.setText(".lang");
+		txtFileextension.setText(Constants.LANG_EXTENSION);
 		panel.add(txtFileextension);
 		txtFileextension.setColumns(10);
 		
@@ -151,7 +152,7 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		panel.add(lblLocalizationDelimiter);
 		
 		txtDelimiter = new JTextField();
-		txtDelimiter.setText("=");
+		txtDelimiter.setText(Constants.LANG_FILE_DEFAULT_DELIM);
 		panel.add(txtDelimiter);
 		txtDelimiter.setColumns(10);
 		
@@ -194,7 +195,7 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		reg("New Project.label.Create lang_version.xml", lblNewLabel::setText);
 		panel_2.add(lblNewLabel);
 		
-		chckbxSaveVersionFile = new JCheckBox("");
+		chckbxSaveVersionFile = new JCheckBox();
 		panel_2.add(chckbxSaveVersionFile);
 		chckbxSaveVersionFile.setHorizontalAlignment(SwingConstants.RIGHT);
 		businessLogic.if_(bl -> btnBrowse_1.addActionListener(bl::selectLangFiles));

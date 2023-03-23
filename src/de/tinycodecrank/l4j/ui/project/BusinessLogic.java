@@ -9,6 +9,7 @@ import javax.swing.JFileChooser;
 import de.tinycodecrank.l4j.config.ProjectConfig;
 import de.tinycodecrank.l4j.prefs.FileType.LocalizingFileType;
 import de.tinycodecrank.l4j.startup.Localizer4J;
+import de.tinycodecrank.l4j.util.Constants;
 import de.tinycodecrank.monads.opt.Opt;
 import de.tinycodecrank.util.swing.DialogLogicTemplate;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
@@ -47,14 +48,14 @@ final class BusinessLogic extends DialogLogicTemplate<ProjectGui, Void>
 				.if_(
 					lP -> project.langFolder = relativize(pP, lP)
 						.map(Path::toString)
-						.map(path -> "./" + path)
+						.map(path -> Constants.CURR_DIR_RELATIVE + path)
 						.get(() -> lP.toString()));
 			
 			sourceFolder.map(File::toPath)
 				.if_(
 					sP -> project.sourceFolder = relativize(pP, sP)
 						.map(Path::toString)
-						.map(path -> "./" + path)
+						.map(path -> Constants.CURR_DIR_RELATIVE + path)
 						.get(() -> sP.toString()));
 			
 			gui.dispose(new GuiCloseEvent<>(Result.SUCCESS, Opt.empty(), project));
@@ -93,7 +94,7 @@ final class BusinessLogic extends DialogLogicTemplate<ProjectGui, Void>
 							.map(
 								pP -> relativize(pP, lP)
 									.map(Path::toString)
-									.map(path -> "./" + path)
+									.map(path -> Constants.CURR_DIR_RELATIVE + path)
 									.get(() -> lP.toString()))
 							.get(() -> lP.toString());
 						gui.textLanguageLocation.setText(langFolder);
@@ -113,7 +114,7 @@ final class BusinessLogic extends DialogLogicTemplate<ProjectGui, Void>
 							.map(
 								pP -> relativize(pP, sP)
 									.map(Path::toString)
-									.map(path -> "./" + path)
+									.map(path -> Constants.CURR_DIR_RELATIVE + path)
 									.get(() -> sP.toString()))
 							.get(() -> sP.toString());
 						gui.textSourceLocation.setText(sourceFolder);
@@ -127,7 +128,8 @@ final class BusinessLogic extends DialogLogicTemplate<ProjectGui, Void>
 		{
 			JFileChooser chooser = new JFileChooser(startFolder);
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			int resultCode = chooser.showDialog(gui, "select");
+			final var	approve		= gui.localizer().localize("New Project.fileChooser.selectFolder.button_approve");
+			int			resultCode	= chooser.showDialog(gui, approve);
 			if (resultCode == JFileChooser.APPROVE_OPTION)
 			{
 				return Opt.of(chooser.getSelectedFile());

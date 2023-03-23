@@ -1,6 +1,7 @@
 package de.tinycodecrank.l4j.ui.main.parts;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
@@ -13,7 +14,6 @@ public class TableModelMisc extends DefaultTableModel
 	private static final long serialVersionUID = 1L;
 	
 	private ArrayList<TableRowContent> content = new ArrayList<>();
-	
 	
 	public TableModelMisc(String[] header)
 	{
@@ -29,17 +29,17 @@ public class TableModelMisc extends DefaultTableModel
 	public void setContent(ProjectStringsIndex indexes, String key, String path)
 	{
 		this.content = new ArrayList<>();
-		if(indexes != null)
+		if (indexes != null)
 		{
-			for(Index index : indexes.getOccurences(key))
+			for (Index index : indexes.getOccurences(key))
 			{
-				String fileName = index.fileName;
-				String lineText = index.lineContent;
-				TableRowContent row = new TableRowContent(fileName, lineText, index.line);
+				String			fileName	= index.fileName;
+				String			lineText	= index.lineContent;
+				TableRowContent	row			= new TableRowContent(fileName, lineText, index.line);
 				content.add(row);
 			}
 		}
-		this.content.sort((a, b)->{return a.compareTo(b);});
+		this.content.sort(TableRowContent::compareTo);
 		this.fireTableDataChanged();
 	}
 	
@@ -47,13 +47,19 @@ public class TableModelMisc extends DefaultTableModel
 	public void setHeaderTitle(String title, int column)
 	{
 		this.columnIdentifiers.set(column, title);
-		this.fireTableChanged(new TableModelEvent(this, TableModelEvent.HEADER_ROW, TableModelEvent.HEADER_ROW, column, TableModelEvent.UPDATE));
+		this.fireTableChanged(
+			new TableModelEvent(
+				this,
+				TableModelEvent.HEADER_ROW,
+				TableModelEvent.HEADER_ROW,
+				column,
+				TableModelEvent.UPDATE));
 	}
 	
 	@Override
 	public int getRowCount()
 	{
-		if(content != null)
+		if (content != null)
 		{
 			return this.content.size();
 		}
@@ -79,7 +85,7 @@ public class TableModelMisc extends DefaultTableModel
 	public Object getValueAt(int row, int column)
 	{
 		TableRowContent trc = content.get(row);
-		switch(column)
+		switch (column)
 		{
 			case 0:
 				return trc.lineNumber;
@@ -92,35 +98,53 @@ public class TableModelMisc extends DefaultTableModel
 		}
 	}
 	
-	private class TableRowContent implements Comparable<TableRowContent>
+	private static class TableRowContent implements Comparable<TableRowContent>
 	{
-		private String fileName;
-		private String lineText;
-		private int lineNumber;
+		private String	fileName;
+		private String	lineText;
+		private int		lineNumber;
 		
 		private TableRowContent(String fileName, String lineText, int lineNumber)
 		{
-			this.fileName = fileName;
-			this.lineText = lineText;
-			this.lineNumber = lineNumber;
+			this.fileName	= fileName;
+			this.lineText	= lineText;
+			this.lineNumber	= lineNumber;
 		}
-
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (obj == null)
+				return false;
+			if (obj == this)
+				return true;
+			if (!(obj instanceof TableRowContent other))
+				return false;
+			return compareTo(other) == 0;
+		}
+		
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(fileName, lineNumber);
+		}
+		
 		@Override
 		public int compareTo(TableRowContent o)
 		{
 			int result = this.fileName.compareTo(o.fileName);
-			if(result != 0)
+			if (result != 0)
 			{
 				return result;
 			}
 			else
 			{
 				result = this.lineNumber - o.lineNumber;
-				if(result == 0)
+				if (result == 0)
 				{
 					return 0;
 				}
-				else if(result > 0)
+				else if (result > 0)
 				{
 					return 1;
 				}

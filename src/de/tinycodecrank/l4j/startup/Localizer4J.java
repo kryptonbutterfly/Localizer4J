@@ -21,6 +21,7 @@ import de.tinycodecrank.io.FileSystemUtils;
 import de.tinycodecrank.l4j.misc.Assets;
 import de.tinycodecrank.l4j.prefs.Prefs;
 import de.tinycodecrank.l4j.ui.main.MainGui;
+import de.tinycodecrank.l4j.util.Constants;
 import de.tinycodecrank.monads.opt.Opt;
 import de.tinycodecrank.os.Platforms;
 import de.tinycodecrank.reflectionUtils.Accessor;
@@ -38,8 +39,6 @@ public class Localizer4J
 	private static final File	LOG_FOLDER		= new File(APP_FOLDER, "logs");
 	private static final File	LOG_FILE		= new File(LOG_FOLDER, "localizer4J.log");
 	
-	private static final String PROGRAM_DOCK_NAME = "Localizer4J";
-	
 	static
 	{
 		System.setProperty("localizer4J.logfile", LOG_FILE.getPath());
@@ -49,7 +48,7 @@ public class Localizer4J
 	
 	public static void main(String[] args)
 	{
-		main(new ProgramArgs(args, "Localizer4J\n"));
+		main(new ProgramArgs(args, Constants.PROGRAM_INFO));
 	}
 	
 	private static void main(ProgramArgs args)
@@ -135,7 +134,7 @@ public class Localizer4J
 		{
 			final Toolkit toolkit = Toolkit.getDefaultToolkit();
 			new Accessor<>(toolkit, toolkit.getClass().getDeclaredField("awtAppClassName"))
-				.applyObj(Field::set, PROGRAM_DOCK_NAME);
+				.applyObj(Field::set, Constants.PROGRAM_DOCK_NAME);
 		}
 		catch (
 			InaccessibleObjectException

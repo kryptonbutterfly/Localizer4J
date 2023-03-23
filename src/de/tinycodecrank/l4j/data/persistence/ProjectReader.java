@@ -32,7 +32,7 @@ public class ProjectReader implements Constants
 	{
 		try
 		{
-			FileVisitor visitor = new FileVisitor("", ".java");
+			FileVisitor visitor = new FileVisitor("", Constants.JAVA_SOURCE_EXTENSION);
 			Files.walkFileTree(path.toPath(), visitor);
 			return visitor.results;
 		}
@@ -46,7 +46,7 @@ public class ProjectReader implements Constants
 	{
 		try
 		{
-			FileVisitor visitor = new FileVisitor("", ".java");
+			FileVisitor visitor = new FileVisitor("", Constants.JAVA_SOURCE_EXTENSION);
 			Files.walkFileTree(Paths.get(path), visitor);
 			return visitor.results;
 		}
@@ -166,12 +166,12 @@ public class ProjectReader implements Constants
 		while ((line = br.readLine()) != null)
 		{
 			int	lastIndex	= 0;
-			int	index		= line.indexOf("\"");
+			int	index		= line.indexOf('"');
 			if (index != -1)
 			{
 				sb			= new StringBuilder();
 				lastIndex	= index;
-				index		= line.indexOf("\"", index + 1);
+				index		= line.indexOf('"', index + 1);
 				if (index != -1)
 				{
 					while (index != -1)
@@ -180,7 +180,7 @@ public class ProjectReader implements Constants
 						misc.put(sb.toString(), fileName, line, currentLine);
 						
 						lastIndex	= index;
-						index		= line.indexOf("\"", index + 1);
+						index		= line.indexOf('"', index + 1);
 					}
 				}
 			}

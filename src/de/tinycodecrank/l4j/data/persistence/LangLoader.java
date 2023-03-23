@@ -54,7 +54,7 @@ public class LangLoader implements LanguageLoader
 	@Override
 	public void save(Language language, File folder)
 	{
-		File outFile = new File(folder, language.getName() + settings.langFileExtension);
+		File outFile = compute(language, folder);
 		try (FileWriter fw = new FileWriter(outFile))
 		{
 			try (BufferedWriter bw = new BufferedWriter(fw))
@@ -84,12 +84,8 @@ public class LangLoader implements LanguageLoader
 	}
 	
 	@Override
-	public void delete(Language language, File folder)
+	public String fileExtension()
 	{
-		File delFile = new File(folder, language.getName() + settings.langFileExtension);
-		if (delFile.exists())
-		{
-			delFile.delete();
-		}
+		return settings.langFileExtension;
 	}
 }

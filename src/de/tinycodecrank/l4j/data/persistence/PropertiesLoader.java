@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import de.tinycodecrank.l4j.data.gui.Translation;
+import de.tinycodecrank.l4j.util.Constants;
 
 public class PropertiesLoader implements LanguageLoader
 {
@@ -32,8 +33,7 @@ public class PropertiesLoader implements LanguageLoader
 	@Override
 	public void save(Language language, File folder)
 	{
-		String lang = language.getName() + ".properties";
-		try (FileOutputStream oStream = new FileOutputStream(new File(folder, lang), false))
+		try (FileOutputStream oStream = new FileOutputStream(compute(language, folder), false))
 		{
 			Properties props = new Properties();
 			for (Translation entry : language.translations)
@@ -49,12 +49,8 @@ public class PropertiesLoader implements LanguageLoader
 	}
 	
 	@Override
-	public void delete(Language language, File folder)
+	public String fileExtension()
 	{
-		File delFile = new File(folder, language.getName());
-		if (delFile.exists())
-		{
-			delFile.delete();
-		}
+		return Constants.PROPERTIES_EXTENSION;
 	}
 }

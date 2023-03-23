@@ -95,7 +95,7 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		JLabel label_2 = new JLabel();
 		reg("Settings.label.Save to lang_versions.xml", label_2::setText);
 		panel.add(label_2);
-		chckbxSaveVersionFile = new JCheckBox("");
+		chckbxSaveVersionFile = new JCheckBox();
 		chckbxSaveVersionFile.setSelected(fileSettings.versionListFile);
 		chckbxSaveVersionFile.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel.add(chckbxSaveVersionFile);
