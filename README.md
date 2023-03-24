@@ -1,3 +1,5 @@
+<img width="82" align="left" src="https://raw.githubusercontent.com/tinycodecrank/Localizer4J/master/resources/icon_82x82.png"/>
+
 # Localizer4J
 A Language file Editor with special sauce for java projects.
 

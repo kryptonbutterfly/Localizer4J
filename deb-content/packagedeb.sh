@@ -37,7 +37,7 @@ cp $SOURCE_DIR/build/$APP_NAME.jar $TEMP_DIR/debian/usr/share/$PACKAGE_NAME/
 
 echo "$PACKAGE_NAME ($PACKAGE_VERSION) trusty; urgency=low" > changelog
 echo "  * Rebuild" >> changelog
-echo " -- tinycodecrank <38176554+tinycodecrank@users.noreply.github.com> `date -R`" >> changelog
+echo " -- tinycodecrank <tinycodecrank@gmail.com> `date -R`" >> changelog
 gzip -9c changelog > $TEMP_DIR/debian/usr/share/doc/$PACKAGE_NAME/changelog.gz
 
 cp *.svg $TEMP_DIR/debian/usr/share/$PACKAGE_NAME/
@@ -48,7 +48,6 @@ chmod 0664 $TEMP_DIR/debian/usr/share/$PACKAGE_NAME/*png
 
 PACKAGE_SIZE=`du -bs $TEMP_DIR/debian | cut -f 1`
 PACKAGE_SIZE=$((PACKAGE_SIZE/1024))
-echo "Icon: /usr/share/$PACKAGE_NAME/icon.png" >> $TEMP_DIR/debian/DEBIAN/control
 echo "Installed-Size: $PACKAGE_SIZE" >> $TEMP_DIR/debian/DEBIAN/control
 
 chown -R root $TEMP_DIR/debian/
