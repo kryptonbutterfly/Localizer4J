@@ -224,7 +224,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		{}, Localizer4J.prefs.fileSettings, l10n));
 	}
 	
-	KeyListener changeTranslation()
+	KeyListener changeTranslation_Enter()
 	{
 		return KeyEventListener.create(
 			KeyEventType.PRESSED,
@@ -235,6 +235,27 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				return true;
 			},
 			KeyEvent.VK_ENTER);
+	}
+	
+	KeyListener changeTranslation_Escape()
+	{
+		return KeyEventListener.create(
+			KeyEventType.PRESSED,
+			e ->
+			{
+				gui.if_(gui -> project.if_(project ->
+				{
+					String	text			= "";
+					final int selection		= gui.table.getSelectedRow();
+					final var translatable	= gui.tableModel.getTranslatable(selection);
+					if (translatable != null && translatable instanceof Translation translation)
+						text = translation.getTranslation();
+					
+					gui.txtTranslation.setText(text);
+				}));
+				return true;
+			},
+			KeyEvent.VK_ESCAPE);
 	}
 	
 	void changeTranslation(ActionEvent ae)
@@ -679,7 +700,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		}));
 	}
 	
-	KeyListener addKey()
+	KeyListener addKey_Enter()
 	{
 		return KeyEventListener.create(
 			KeyEventType.PRESSED,
@@ -690,6 +711,18 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			},
 			KeyEvent.VK_ENTER,
 			KeyEvent.VK_ACCEPT);
+	}
+	
+	KeyListener addKey_Escape()
+	{
+		return KeyEventListener.create(
+			KeyEventType.PRESSED,
+			e ->
+			{
+				gui.if_(gui -> gui.txtAddKey.setText(""));
+				return true;
+			},
+			KeyEvent.VK_ESCAPE);
 	}
 	
 	void addKey(ActionEvent ae)

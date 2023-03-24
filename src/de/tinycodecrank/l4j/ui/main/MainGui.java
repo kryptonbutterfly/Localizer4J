@@ -275,7 +275,8 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		txtAddKey.setWrapStyleWord(true);
 		txtAddKey.setTabSize(10);
 		txtAddKey.setEnabled(false);
-		businessLogic.if_(bl -> txtAddKey.addKeyListener(bl.addKey()));
+		businessLogic.if_(bl -> txtAddKey.addKeyListener(bl.addKey_Enter()));
+		businessLogic.if_(bl -> txtAddKey.addKeyListener(bl.addKey_Escape()));
 		
 		btnAddKey = new JButton();
 		reg("Main.button.add", btnAddKey::setText);
@@ -382,7 +383,8 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 				btnApply.setEnabled(true);
 			}
 		});
-		businessLogic.if_(bl -> txtTranslation.addKeyListener(bl.changeTranslation()));
+		businessLogic.if_(bl -> txtTranslation.addKeyListener(bl.changeTranslation_Enter()));
+		businessLogic.if_(bl -> txtTranslation.addKeyListener(bl.changeTranslation_Escape()));
 		
 		txtTranslationFallback = new JTextArea();
 		txtTranslationFallback.setWrapStyleWord(true);
