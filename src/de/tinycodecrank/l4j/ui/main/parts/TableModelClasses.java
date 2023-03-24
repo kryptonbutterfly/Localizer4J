@@ -28,17 +28,15 @@ public class TableModelClasses extends DefaultTableModel
 	public void setContent(ProjectStringsIndex classes, String key, String path)
 	{
 		this.content = new ArrayList<>();
-		if(classes != null)
-		{
-			for(Index ind : classes.getOccurences(key))
+		if (classes != null)
+			for (Index ind : classes.getOccurences(key))
 			{
 				TableRowClass trc = new TableRowClass();
-				trc.className = ind.fileName;
-				trc.line = ind.line;
+				trc.className	= ind.fileName;
+				trc.line		= ind.line;
 				content.add(trc);
 			}
-		}
-		this.content.sort((a, b)->{return a.compareTo(b);});
+		this.content.sort(TableRowClass::compareTo);
 		this.fireTableDataChanged();
 	}
 	
@@ -46,20 +44,21 @@ public class TableModelClasses extends DefaultTableModel
 	public void setHeaderTitle(String title, int column)
 	{
 		this.columnIdentifiers.set(column, title);
-		this.fireTableChanged(new TableModelEvent(this, TableModelEvent.HEADER_ROW, TableModelEvent.HEADER_ROW, column, TableModelEvent.UPDATE));
+		this.fireTableChanged(
+			new TableModelEvent(
+				this,
+				TableModelEvent.HEADER_ROW,
+				TableModelEvent.HEADER_ROW,
+				column,
+				TableModelEvent.UPDATE));
 	}
 	
 	@Override
 	public int getRowCount()
 	{
-		if(content != null)
-		{
-			return this.content.size();
-		}
-		else
-		{
+		if (content == null)
 			return 0;
-		}
+		return this.content.size();
 	}
 	
 	@Override
@@ -78,14 +77,11 @@ public class TableModelClasses extends DefaultTableModel
 	public Object getValueAt(int row, int column)
 	{
 		TableRowClass trc = content.get(row);
-		switch(column)
+		return switch (column)
 		{
-			case 0:
-				return Integer.toString(trc.line);
-			case 1:
-				return trc.className;
-			default:
-				return null;
-		}
+			case 0 -> Integer.toString(trc.line);
+			case 1 -> trc.className;
+			default -> null;
+		};
 	}
 }

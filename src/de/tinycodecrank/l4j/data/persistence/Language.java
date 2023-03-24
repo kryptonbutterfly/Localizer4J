@@ -81,17 +81,13 @@ public class Language
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Language other))
 			return false;
-		Language other = (Language) obj;
+		if (name == other.name)
+			return true;
 		if (name == null)
-		{
-			if (other.name != null)
-				return false;
-		}
-		else if (!name.equals(other.name))
 			return false;
-		return true;
+		return name.equals(other.name);
 	}
 	
 	public void dirty(boolean dirty)

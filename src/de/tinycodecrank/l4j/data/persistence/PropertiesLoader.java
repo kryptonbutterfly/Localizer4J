@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import de.tinycodecrank.l4j.data.gui.Translation;
@@ -19,10 +18,10 @@ public class PropertiesLoader implements LanguageLoader
 		{
 			Properties props = new Properties();
 			props.load(iStream);
-			for (Entry<Object, Object> entry : props.entrySet())
-			{
-				language.translations.add(new Translation((String) entry.getKey(), (String) entry.getValue()));
-			}
+			props.forEach((key, value) -> language.translations.add(new Translation((String) key, (String) value)));
+			// for (Entry<Object, Object> entry : props.entrySet())
+			// language.translations.add(new Translation((String) entry.getKey(), (String)
+			// entry.getValue()));
 		}
 		catch (IOException e)
 		{
@@ -37,9 +36,8 @@ public class PropertiesLoader implements LanguageLoader
 		{
 			Properties props = new Properties();
 			for (Translation entry : language.translations)
-			{
 				props.setProperty(entry.getKey(), entry.getTranslation());
-			}
+			
 			props.store(oStream, null);
 		}
 		catch (IOException e)

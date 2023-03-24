@@ -1,5 +1,7 @@
 package de.tinycodecrank.l4j.misc;
 
+import static de.tinycodecrank.math.utils.range.Range.*;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -92,28 +94,15 @@ public final class Assets
 		};
 		
 		BufferedImage image = new BufferedImage(buffer[0].length(), buffer.length, BufferedImage.TYPE_INT_RGB);
-		for (int y = 0; y < image.getHeight(); y++)
-		{
-			for (int x = 0; x < image.getWidth(); x++)
-			{
-				Color color;
-				switch (buffer[y].charAt(x))
+		for (int y : range(image.getHeight()))
+			for (int x : range(image.getWidth()))
+				image.setRGB(x, y, switch (buffer[y].charAt(x))
 				{
-					case '0':
-						color = borderColor;
-						break;
-					case '-':
-						color = bgColor;
-						break;
-					case '8':
-						color = strikeThrough;
-						break;
-					default:
-						color = Color.PINK;
-				}
-				image.setRGB(x, y, color.getRGB());
-			}
-		}
+					case '0' -> borderColor.getRGB();
+					case '-' -> bgColor.getRGB();
+					case '8' -> strikeThrough.getRGB();
+					default -> Color.PINK.getRGB();
+				});
 		return image;
 	}
 }

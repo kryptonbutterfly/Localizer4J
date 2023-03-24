@@ -1,5 +1,6 @@
 package de.tinycodecrank.l4j.util;
 
+import java.awt.Color;
 import java.nio.charset.Charset;
 
 public interface Constants
@@ -19,4 +20,14 @@ public interface Constants
 	
 	public static final String	PROGRAM_DOCK_NAME	= "Localizer4J";
 	public static final String	PROGRAM_INFO		= "Localizer4J\n";
+	
+	public static final Color	light_Red		= new Color(255, 191, 191);
+	public static final Color	light_Gray		= new Color(191, 191, 191);
+	public static final Color	light_Green		= new Color(191, 255, 191);
+	public static final Color	light_Yellow	= new Color(255, 255, 191);
+	
+	public static final Color	dark_Red	= new Color(64, 0, 0);
+	public static final Color	dark_Gray	= new Color(96, 96, 96);
+	public static final Color	dark_Green	= new Color(0, 64, 0);
+	public static final Color	dark_Yellow	= new Color(64, 64, 0);
 }

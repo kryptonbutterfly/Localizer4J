@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 
 import de.tinycodecrank.l4j.data.index.ProjectStringsIndex;
 import de.tinycodecrank.l4j.data.index.ProjectStringsIndex.Index;
+import de.tinycodecrank.math.utils.limit.LimitInt;
 
 public class TableModelMisc extends DefaultTableModel
 {
@@ -30,7 +31,6 @@ public class TableModelMisc extends DefaultTableModel
 	{
 		this.content = new ArrayList<>();
 		if (indexes != null)
-		{
 			for (Index index : indexes.getOccurences(key))
 			{
 				String			fileName	= index.fileName;
@@ -38,7 +38,7 @@ public class TableModelMisc extends DefaultTableModel
 				TableRowContent	row			= new TableRowContent(fileName, lineText, index.line);
 				content.add(row);
 			}
-		}
+		
 		this.content.sort(TableRowContent::compareTo);
 		this.fireTableDataChanged();
 	}
@@ -59,14 +59,9 @@ public class TableModelMisc extends DefaultTableModel
 	@Override
 	public int getRowCount()
 	{
-		if (content != null)
-		{
-			return this.content.size();
-		}
-		else
-		{
+		if (content == null)
 			return 0;
-		}
+		return this.content.size();
 	}
 	
 	@Override
@@ -85,17 +80,13 @@ public class TableModelMisc extends DefaultTableModel
 	public Object getValueAt(int row, int column)
 	{
 		TableRowContent trc = content.get(row);
-		switch (column)
+		return switch (column)
 		{
-			case 0:
-				return trc.lineNumber;
-			case 1:
-				return trc.fileName;
-			case 2:
-				return trc.lineText;
-			default:
-				return null;
-		}
+			case 0 -> trc.lineNumber;
+			case 1 -> trc.fileName;
+			case 2 -> trc.lineText;
+			default -> null;
+		};
 	}
 	
 	private static class TableRowContent implements Comparable<TableRowContent>
@@ -134,25 +125,8 @@ public class TableModelMisc extends DefaultTableModel
 		{
 			int result = this.fileName.compareTo(o.fileName);
 			if (result != 0)
-			{
 				return result;
-			}
-			else
-			{
-				result = this.lineNumber - o.lineNumber;
-				if (result == 0)
-				{
-					return 0;
-				}
-				else if (result > 0)
-				{
-					return 1;
-				}
-				else
-				{
-					return -1;
-				}
-			}
+			return LimitInt.clamp(-1, this.lineNumber - o.lineNumber, 1);
 		}
 	}
 }

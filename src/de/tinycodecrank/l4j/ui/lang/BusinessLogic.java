@@ -17,10 +17,7 @@ final class BusinessLogic extends DialogLogicTemplate<LangGui, Void>
 	
 	void add(ActionEvent ae)
 	{
-		gui.if_(gui ->
-		{
-			gui.dispose(new GuiCloseEvent<String>(Result.SUCCESS, Opt.empty(), gui.txtLang.getText()));
-		});
+		gui.if_(gui -> gui.dispose(new GuiCloseEvent<String>(Result.SUCCESS, Opt.empty(), gui.txtLang.getText())));
 	}
 	
 	void cancle(ActionEvent ae)

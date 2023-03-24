@@ -19,23 +19,9 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 	
 	void fileTypeChanged(ActionEvent event)
 	{
-		gui.if_(gui ->
-		{
-			gui.panelSettingsLang
-				.setVisible(((LocalizingFileType) gui.comboBoxFileType.getSelectedItem()).type().varExtension());
-			final int fileType = gui.comboBoxFileType.getSelectedIndex();
-			switch (fileType)
-			{
-				case (0):
-					gui.panelSettingsLang.setVisible(false);
-					break;
-				case (1):
-					gui.panelSettingsLang.setVisible(true);
-					break;
-				default:
-					break;
-			}
-		});
+		gui.if_(
+			gui -> gui.panelSettingsLang
+				.setVisible(((LocalizingFileType) gui.comboBoxFileType.getSelectedItem()).type().varExtension()));
 	}
 	
 	void setLanguage(ActionEvent event)
@@ -54,9 +40,7 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 		{
 			String langFileExtension = gui.textField.getText().trim();
 			if (!langFileExtension.startsWith(DOT))
-			{
 				langFileExtension = DOT + langFileExtension;
-			}
 			
 			fileSettings.languageFileType		= ((LocalizingFileType) gui.comboBoxFileType.getSelectedItem()).type();
 			fileSettings.langFileExtension		= langFileExtension;
@@ -65,15 +49,9 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 			Localizer4J.prefs.history.maxLength	= (int) gui.spinnerHistoryLength.getModel().getValue();
 			
 			while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
-			{
 				Localizer4J.prefs.history.recent.removeLast();
-			}
-			while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
-			{
-				Localizer4J.prefs.history.recent.removeLast();
-			}
-			Localizer4J.prefs.language = gui.localizer().currentLanguage();
 			
+			Localizer4J.prefs.language = gui.localizer().currentLanguage();
 			gui.dispose();
 		});
 	}

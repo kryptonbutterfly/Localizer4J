@@ -63,14 +63,8 @@ public class ProjectConfig extends FileConfig implements Constants
 	
 	private Opt<File> sourceFolder()
 	{
-		if (sourceFolder != null)
-		{
-			return Opt.of(new File(configFile.getParentFile(), sourceFolder));
-		}
-		else
-		{
-			return Opt.empty();
-		}
+		return Opt.of(sourceFolder)
+			.map(source -> new File(configFile.getParentFile(), source));
 	}
 	
 	public void loadLanguages()
@@ -110,11 +104,9 @@ public class ProjectConfig extends FileConfig implements Constants
 			e.printStackTrace();
 		}
 		
-		langVersionConfig.languages.forEach((name, version) ->
-		{
-			Opt.of(languages.get(name))
-				.if_(l -> l.version = version);
-		});
+		langVersionConfig.languages.forEach(
+			(name, version) -> Opt.of(languages.get(name))
+				.if_(l -> l.version = version));
 	}
 	
 	public void saveLanguages()

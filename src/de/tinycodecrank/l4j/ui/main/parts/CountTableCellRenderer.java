@@ -30,22 +30,13 @@ public class CountTableCellRenderer extends DefaultTableCellRenderer
 		int row,
 		int column)
 	{
-		if (table != null && value instanceof String)
-		{
-			Color bgColor = null;
-			switch ((String) value)
+		if (table != null && value instanceof String str)
+			super.setBackground(switch (str)
 			{
-				case "?":
-					bgColor = ColorUtils.isBright(table.getBackground()) ? light_Yellow : dark_Yellow;
-					break;
-				case "0":
-					bgColor = ColorUtils.isBright(table.getBackground()) ? light_Red : dark_Red;
-					break;
-				default:
-					break;
-			}
-			super.setBackground(bgColor);
-		}
+				case "?" -> ColorUtils.isBright(table.getBackground()) ? light_Yellow : dark_Yellow;
+				case "0" -> ColorUtils.isBright(table.getBackground()) ? light_Red : dark_Red;
+				default -> null;
+			});
 		
 		return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}

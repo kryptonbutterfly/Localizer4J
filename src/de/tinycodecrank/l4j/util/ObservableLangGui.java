@@ -26,7 +26,7 @@ public abstract class ObservableLangGui<Logic extends BusinessLogicTemplate<?, A
 	}
 	
 	@SafeVarargs
-	protected final void reg(String key, Consumer<String> ... listener)
+	protected final void reg(String key, Consumer<String>... listener)
 	{
 		this.langManager.reg(key, listener);
 	}
@@ -36,5 +36,4 @@ public abstract class ObservableLangGui<Logic extends BusinessLogicTemplate<?, A
 	{
 		langManager.close();
 	}
-	
 }

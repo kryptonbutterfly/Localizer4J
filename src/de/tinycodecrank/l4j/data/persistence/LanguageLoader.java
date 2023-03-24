@@ -11,9 +11,8 @@ public interface LanguageLoader
 	public default void delete(Language language, File folder)
 	{
 		final var delFile = compute(language, folder);
-		if (delFile.exists())
-			if (!delFile.delete())
-				System.out.println("Deleting file: '%s' failed!".formatted(delFile));
+		if (delFile.exists() && !delFile.delete())
+			System.out.println("Deleting file: '%s' failed!".formatted(delFile));
 	}
 	
 	public String fileExtension();

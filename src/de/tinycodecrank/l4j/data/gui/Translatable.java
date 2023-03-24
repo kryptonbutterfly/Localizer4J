@@ -1,33 +1,37 @@
 package de.tinycodecrank.l4j.data.gui;
 
+import java.awt.Color;
 import java.util.Objects;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
-public abstract class Translatable implements Comparable<Translatable>
+import de.tinycodecrank.l4j.util.ColorUtils;
+import de.tinycodecrank.l4j.util.Constants;
+
+public abstract class Translatable implements Comparable<Translatable>, Constants
 {
 	private static final LevenshteinDistance distance = new LevenshteinDistance(5);
 	
-	private String key;
-	private TranslationState state;
+	private String				key;
+	private TranslationState	state;
 	
 	Translatable(TranslationState state, String key)
 	{
-		this.state = state;
-		this.key = key;
+		this.state	= state;
+		this.key	= key;
 	}
-
+	
 	@Override
 	public int compareTo(Translatable o)
 	{
-		if(o == null)
+		if (o == null)
 		{
 			return 1;
 		}
 		else
 		{
 			int stateDiff = this.state.ordinal() - o.getTranslationState().ordinal();
-			if(stateDiff == 0)
+			if (stateDiff == 0)
 			{
 				return this.key.compareTo(o.getKey());
 			}
@@ -42,7 +46,8 @@ public abstract class Translatable implements Comparable<Translatable>
 	{
 		Objects.requireNonNull(key);
 		return distance.apply(key, this.key);
-	}	
+	}
+	
 	public final String getKey()
 	{
 		return key;
@@ -71,38 +76,46 @@ public abstract class Translatable implements Comparable<Translatable>
 	
 	public static enum TranslationState
 	{
-		MISC_TRANSLATABLE,
-		SOURCE_TRANSLATABLE,
-		TRANSLATED,
-		TRANSLATED_UNUSED,
-		MISSING_TRANSLATABLE;
+		MISC_TRANSLATABLE("Main.table.tooltip.status.localizable", light_Gray, dark_Gray),
+		SOURCE_TRANSLATABLE("Main.table.tooltip.status.localizable", null, null),
+		TRANSLATED("Main.table.tooltip.status.translated", light_Green, dark_Green),
+		TRANSLATED_UNUSED("Main.table.tooltip.status.unused", light_Yellow, dark_Yellow),
+		MISSING_TRANSLATABLE("Main.table.tooltip.status.missing", light_Red, dark_Red);
+		
+		public String	tooltip;
+		private Color	bgBright;
+		private Color	bgDark;
+		
+		private TranslationState(String tooltip, Color bgBright, Color bgDark)
+		{
+			this.tooltip	= tooltip;
+			this.bgBright	= bgBright;
+			this.bgDark		= bgDark;
+		}
+		
+		public Color bgColor(Color bgOriginal)
+		{
+			if (bgBright == null)
+				return bgOriginal;
+			return ColorUtils.isBright(bgOriginal) ? bgBright : bgDark;
+		}
 	}
-
+	
 	@Override
 	public int hashCode()
 	{
 		return Objects.hash(key);
 	}
-
+	
 	@Override
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
-		{
 			return true;
-		}
 		if (obj == null)
-		{
 			return false;
-		}
-		if(obj instanceof Translatable)
-		{
-			Translatable other = (Translatable) obj;
-			return Objects.equals(key, other.key);
-		}
-		else
-		{
+		if (!(obj instanceof Translatable other))
 			return false;
-		}
+		return Objects.equals(key, other.key);
 	}
 }

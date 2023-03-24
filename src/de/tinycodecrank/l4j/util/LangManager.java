@@ -22,13 +22,9 @@ public class LangManager implements AutoCloseable
 	{
 		final String translation = localizer.localize(key);
 		if (!translation.isEmpty())
-		{
 			localizations.add(localizer.get(key, listener));
-		}
 		else
-		{
 			Arrays.stream(listener).forEach(l -> l.accept(null));
-		}
 	}
 	
 	@SafeVarargs

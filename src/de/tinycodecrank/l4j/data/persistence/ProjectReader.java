@@ -72,16 +72,12 @@ public class ProjectReader implements Constants
 		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
 		{
 			if (file.toString().startsWith(path))
-			{
 				for (String ext : fileExtension)
-				{
 					if (file.toString().endsWith(ext))
 					{
 						results.add(file.toFile());
 						break;
 					}
-				}
-			}
 			return FileVisitResult.CONTINUE;
 		}
 	}
@@ -104,17 +100,12 @@ public class ProjectReader implements Constants
 			if (file.toString().startsWith(path))
 			{
 				for (String ext : fileExtensions)
-				{
 					if (file.toString().endsWith(ext))
-					{
 						return FileVisitResult.CONTINUE;
-					}
-				}
+					
 				File f = file.toFile();
 				if (!f.isDirectory())
-				{
 					results.add(f);
-				}
 			}
 			return FileVisitResult.CONTINUE;
 		}
@@ -123,12 +114,7 @@ public class ProjectReader implements Constants
 	public static void scan(List<File> content, String path, ExecutorService executor, ProjectStringsIndex indexes)
 	{
 		for (File file : content)
-		{
-			executor.execute(() ->
-			{
-				scanFile(file, path, indexes);
-			});
-		}
+			executor.execute(() -> scanFile(file, path, indexes));
 	}
 	
 	public static void loadMisc(
@@ -138,7 +124,6 @@ public class ProjectReader implements Constants
 		ProjectStringsIndex misc)
 	{
 		for (File miscFile : miscFiles)
-		{
 			executor.execute(() ->
 			{
 				try
@@ -150,7 +135,6 @@ public class ProjectReader implements Constants
 					System.err.println(e.getClass().getName() + e.getMessage());
 				}
 			});
-		}
 	}
 	
 	private static void loadMiscFile(File miscFile, String path, ProjectStringsIndex misc) throws IOException
@@ -173,7 +157,6 @@ public class ProjectReader implements Constants
 				lastIndex	= index;
 				index		= line.indexOf('"', index + 1);
 				if (index != -1)
-				{
 					while (index != -1)
 					{
 						sb.append(line.substring(lastIndex + 1, index));
@@ -182,7 +165,6 @@ public class ProjectReader implements Constants
 						lastIndex	= index;
 						index		= line.indexOf('"', index + 1);
 					}
-				}
 			}
 			currentLine++;
 		}

@@ -63,9 +63,7 @@ public class Localizer4J
 			ObservableGui.setDefaultAppImage(Assets.APP_ICON);
 			
 			if (!args.initialized && args.projectFile == null)
-			{
 				createAppShortcut();
-			}
 			
 			EventQueue.invokeLater(() -> new MainGui(e -> prefs.save(), args, l10n));
 		}
@@ -193,10 +191,6 @@ public class Localizer4J
 			{
 				e.printStackTrace();
 			}
-		})
-			.else_(() ->
-			{
-				System.out.println("running in IDE? - skipping shortcut creation");
-			});
+		}).else_(() -> System.out.println("running in IDE? - skipping shortcut creation"));
 	}
 }

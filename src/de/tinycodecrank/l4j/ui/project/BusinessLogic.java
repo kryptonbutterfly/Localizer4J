@@ -131,13 +131,8 @@ final class BusinessLogic extends DialogLogicTemplate<ProjectGui, Void>
 			final var	approve		= gui.localizer().localize("New Project.fileChooser.selectFolder.button_approve");
 			int			resultCode	= chooser.showDialog(gui, approve);
 			if (resultCode == JFileChooser.APPROVE_OPTION)
-			{
 				return Opt.of(chooser.getSelectedFile());
-			}
-			else
-			{
-				return Opt.empty();
-			}
+			return Opt.empty();
 		});
 	}
 	

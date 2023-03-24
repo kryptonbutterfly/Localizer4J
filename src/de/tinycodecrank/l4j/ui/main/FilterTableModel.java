@@ -1,5 +1,7 @@
 package de.tinycodecrank.l4j.ui.main;
 
+import static de.tinycodecrank.math.utils.range.Range.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,26 +69,22 @@ public class FilterTableModel extends AbstractTableModel
 	@Override
 	public Class<?> getColumnClass(int columnIndex)
 	{
-		switch (columnIndex)
+		return switch (columnIndex)
 		{
-			case 1:
-				return Translatable.class;
-			case 0:
-			default:
-				return String.class;
-		}
+			case 1 -> Translatable.class;
+			case 2 -> String.class;
+			default -> String.class;
+		};
 	}
 	
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
-		switch (rowIndex)
+		return switch (rowIndex)
 		{
-			case (1):
-				return LimitInt.inRange(0, rowIndex, translated.size() + missing.size() - 1);
-			default:
-				return false;
-		}
+			case (1) -> LimitInt.inRange(0, rowIndex, translated.size() + missing.size() - 1);
+			default -> false;
+		};
 	}
 	
 	@Override
@@ -106,133 +104,94 @@ public class FilterTableModel extends AbstractTableModel
 	{
 		if (isCellEditable(row, column))
 		{
-			if (aValue != null && aValue instanceof String)
-			{
-				final String key = ((String) aValue).trim();
-				if (!key.isEmpty())
-				{
-					if (row < translated.size())
-					{
-						Translation translation = translated.get(row);
-						if (!translation.getKey().equals(key))
-						{
-							available.values()
-								.stream()
-								.filter(l -> l != language)
-								.forEach(l ->
-								{
-									Translation original = null;
-									Translation target	= null;
-									for (Translation tmp : l.translations)
-									{
-										if (original == null && tmp.getKey().equals(translation.getKey()))
-										{
-											original = tmp;
-										}
-										if (target == null && tmp.getKey().equals(key))
-										{
-											target = tmp;
-										}
-										if (original != null && target != null)
-										{
-											break;
-										}
-									}
-									if (target != null)
-									{
-										l.translations.remove(original);
-									}
-									else
-									{
-										original.setKey(key);
-									}
-								});
-							translation.setKey(key);
-						}
-					}
-					else
-					{
-						row -= translated.size();
-						Translatable translatable = missing.get(row);
-						if (!translatable.getKey().equals(key))
-						{
-							available.values()
-								.stream()
-								.forEach(l ->
-								{
-									Translation original = null;
-									Translation target	= null;
-									for (Translation tmp : l.translations)
-									{
-										if (original == null && tmp.getKey().equals(translatable.getKey()))
-										{
-											original = tmp;
-										}
-										if (target == null && tmp.getKey().equals(key))
-										{
-											target = tmp;
-										}
-										if (original != null && target != null)
-										{
-											break;
-										}
-									}
-								});
-						}
-					}
-					recalculate();
-				}
-			}
-		}
-		else
-		{
 			final String	template	= "Changing Cell [%d,%d] is not supported!";
 			String			msg			= String.format(template, column, row);
 			throw new OutOfBoundsException(msg);
 		}
-	}
-	
-	public Translatable getTranslatable(int row)
-	{
-		if (LimitInt.inRange(0, row, getRowCount()))
+		if (aValue == null || !(aValue instanceof String value))
+			return;
+		
+		final String key = value.trim();
+		if (key.isEmpty())
+			return;
+		
+		if (row < translated.size())
 		{
-			if (row < translated.size())
+			Translation translation = translated.get(row);
+			if (!translation.getKey().equals(key))
 			{
-				return translated.get(row);
-			}
-			else
-			{
-				row -= translated.size();
-				if (row < missing.size())
-				{
-					return missing.get(row);
-				}
-				else
-				{
-					row -= missing.size();
-					if (row < untranslated.size())
+				available.values()
+					.stream()
+					.filter(l -> l != language)
+					.forEach(l ->
 					{
-						return untranslated.get(row);
-					}
-					else
-					{
-						row -= untranslated.size();
-						if (row < untranslatedMisc.size())
+						Translation original = null;
+						Translation target	= null;
+						for (Translation tmp : l.translations)
 						{
-							return untranslatedMisc.get(row);
+							if (original == null && tmp.getKey().equals(translation.getKey()))
+								original = tmp;
+							if (target == null && tmp.getKey().equals(key))
+								target = tmp;
+							if (original != null && target != null)
+								break;
 						}
+						if (target != null)
+							l.translations.remove(original);
 						else
-						{
-							return null;
-						}
-					}
-				}
+							original.setKey(key);
+					});
+				translation.setKey(key);
 			}
 		}
 		else
 		{
-			return null;
+			row -= translated.size();
+			Translatable translatable = missing.get(row);
+			if (!translatable.getKey().equals(key))
+			{
+				available.values()
+					.stream()
+					.forEach(l ->
+					{
+						Translation original = null;
+						Translation target	= null;
+						for (Translation tmp : l.translations)
+						{
+							if (original == null && tmp.getKey().equals(translatable.getKey()))
+								original = tmp;
+							if (target == null && tmp.getKey().equals(key))
+								target = tmp;
+							if (original != null && target != null)
+								break;
+						}
+					});
+			}
 		}
+		recalculate();
+	}
+	
+	public Translatable getTranslatable(int row)
+	{
+		if (!LimitInt.inRange(0, row, getRowCount()))
+			return null;
+		
+		if (row < translated.size())
+			return translated.get(row);
+		
+		row -= translated.size();
+		if (row < missing.size())
+			return missing.get(row);
+		
+		row -= missing.size();
+		if (row < untranslated.size())
+			return untranslated.get(row);
+		
+		row -= untranslated.size();
+		if (row < untranslatedMisc.size())
+			return untranslatedMisc.get(row);
+		
+		return null;
 	}
 	
 	@Override
@@ -240,54 +199,36 @@ public class FilterTableModel extends AbstractTableModel
 	{
 		LimitInt.assertLimit(0, column, header.length, "column");
 		Translatable translatable = getTranslatable(row);
-		if (translatable != null)
+		if (translatable == null)
+			return null;
+		
+		return switch (column)
 		{
-			switch (column)
+			case 0 ->
 			{
-				case (0):
-					if (sources != null && miscContent != null)
-					{
-						int	sourceOccurences	= sources.getOccurences(translatable.getKey()).size();
-						int	miscOccurences		= miscContent.getOccurences(translatable.getKey()).size();
-						
-						if (sourceOccurences != 0)
-						{
-							return Integer.toString(sourceOccurences);
-						}
-						else
-						{
-							return Integer.toString(miscOccurences);
-						}
-					}
-					else
-					{
-						return "?";
-					}
-				case (1):
-					return translatable;
+				if (sources == null || miscContent == null)
+					yield "?";
+				int	sourceOccurences	= sources.getOccurences(translatable.getKey()).size();
+				int	miscOccurences		= miscContent.getOccurences(translatable.getKey()).size();
+				
+				if (sourceOccurences != 0)
+					yield Integer.toString(sourceOccurences);
+				yield Integer.toString(miscOccurences);
 			}
-		}
-		return null;
+			case 1 -> translatable;
+			default -> null;
+		};
 	}
 	
 	public String getStringAt(int row, int column)
 	{
 		Object o = getValueAt(row, column);
-		if (o != null)
-		{
-			if (column == 1)
-			{
-				return ((Translatable) o).getKey();
-			}
-			else
-			{
-				return (String) o;
-			}
-		}
-		else
-		{
+		if (o == null)
 			return null;
-		}
+		
+		if (column == 1)
+			return ((Translatable) o).getKey();
+		return (String) o;
 	}
 	
 	@Override
@@ -358,93 +299,68 @@ public class FilterTableModel extends AbstractTableModel
 			if (sourceOcc != null && sourceOcc.size() > 0 || miscOcc != null && miscOcc.size() > 0)
 			{
 				if (TranslationState.TRANSLATED_UNUSED == t.getTranslationState())
-				{
 					t.setTranslationState(TranslationState.TRANSLATED);
-				}
 			}
 			else
 			{
 				if (TranslationState.TRANSLATED == t.getTranslationState())
-				{
 					t.setTranslationState(TranslationState.TRANSLATED_UNUSED);
-				}
 			}
 		}
 	}
 	
 	public void removeRow(String key)
 	{
-		int row = 0;
-		for (; row < translated.size(); row++)
-		{
+		for (int row : range(translated.size()))
 			if (translated.get(row).getKey().equals(key))
 			{
 				removeRow(row);
 				return;
 			}
-		}
-		row = 0;
-		for (; row < missing.size(); row++)
-		{
+		
+		for (int row : range(missing.size()))
 			if (missing.get(row).getKey().equals(key))
 			{
 				removeRow(row + translated.size());
 				return;
 			}
-		}
 	}
 	
 	public void removeRow(int row)
 	{
-		if (LimitInt.inRange(0, row, translated.size() + missing.size() - 1))
-		{
-			Translatable target;
-			if (row < translated.size())
-			{
-				target = translated.get(row);
-			}
-			else
-			{
-				target = missing.get(row - translated.size());
-			}
-			for (Language lang : available.values())
-			{
-				lang.translations.remove(target);
-			}
-			recalculate();
-		}
+		if (!LimitInt.inRange(0, row, translated.size() + missing.size() - 1))
+			return;
+		
+		final Translatable target;
+		if (row < translated.size())
+			target = translated.get(row);
+		else
+			target = missing.get(row - translated.size());
+		
+		for (Language lang : available.values())
+			lang.translations.remove(target);
+		
+		recalculate();
 	}
 	
 	public int find(String key)
 	{
-		for (int i = 0; i < translated.size(); i++)
-		{
+		for (int i : range(translated.size()))
 			if (translated.get(i).getKey().equals(key))
-			{
 				return i;
-			}
-		}
-		for (int i = 0; i < missing.size(); i++)
-		{
+			
+		for (int i : range(missing.size()))
 			if (missing.get(i).getKey().equals(key))
-			{
 				return translated.size() + i;
-			}
-		}
-		for (int i = 0; i < untranslated.size(); i++)
-		{
+			
+		for (int i : range(untranslated.size()))
 			if (untranslated.get(i).getKey().equals(key))
-			{
 				return translated.size() + missing.size() + i;
-			}
-		}
-		for (int i = 0; i < untranslatedMisc.size(); i++)
-		{
+			
+		for (int i : range(untranslatedMisc.size()))
 			if (untranslatedMisc.get(i).getKey().equals(key))
-			{
 				return translated.size() + missing.size() + untranslated.size() + i;
-			}
-		}
+			
 		return -1;
 	}
 }

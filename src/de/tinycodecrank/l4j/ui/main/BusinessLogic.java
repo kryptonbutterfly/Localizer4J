@@ -56,14 +56,12 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	
 	void init(ProgramArgs args)
 	{
-		if (args.projectFile != null && args.projectFile.length > 0)
-		{
-			File configFile = new File(args.projectFile[0]);
-			if (configFile.exists())
-			{
-				openProject(configFile);
-			}
-		}
+		if (args.projectFile == null || args.projectFile.length <= 0)
+			return;
+		
+		File configFile = new File(args.projectFile[0]);
+		if (configFile.exists())
+			openProject(configFile);
 	}
 	
 	@Override
@@ -98,9 +96,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		synchronized (lockCursor)
 		{
 			if (!this.loadingProject)
-			{
 				run.run();
-			}
 		}
 	}
 	
@@ -267,13 +263,9 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				lang.dirty(true);
 				lang.translations.add(translation);
 				if (project.sources.containsKey(translatable.getKey()))
-				{
 					translation.setTranslationState(TranslationState.TRANSLATED);
-				}
 				else
-				{
 					translation.setTranslationState(TranslationState.TRANSLATED_UNUSED);
-				}
 				gui.tableModel.recalculate();
 			}
 		}));
@@ -292,39 +284,33 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			
 			int	selection	= gui.table.getSelectedRow();
 			int	tableSize	= gui.tableModel.getRowCount();
-			if (LimitInt.inRange(0, selection, tableSize - 1))
-			{
-				String target = gui.tableModel.getStringAt(selection, 1);
-				if (target != null)
-				{
-					Language currentLang = (Language) gui.comboBoxLanguage.getSelectedItem();
-					if (currentLang != null)
+			if (!LimitInt.inRange(0, selection, tableSize - 1))
+				return;
+			
+			String target = gui.tableModel.getStringAt(selection, 1);
+			if (target == null)
+				return;
+			
+			Language currentLang = (Language) gui.comboBoxLanguage.getSelectedItem();
+			if (currentLang != null)
+				for (Translation translation : currentLang.translations)
+					if (translation.getKey().equals(target))
 					{
-						for (Translation translation : currentLang.translations)
-						{
-							if (translation.getKey().equals(target))
-							{
-								gui.txtTranslation.setText(translation.getTranslation());
-								break;
-							}
-						}
+						gui.txtTranslation.setText(translation.getTranslation());
+						break;
 					}
-					Language fallbackLang = (Language) gui.comboBoxFallback.getSelectedItem();
-					if (fallbackLang != null)
+				
+			Language fallbackLang = (Language) gui.comboBoxFallback.getSelectedItem();
+			if (fallbackLang != null)
+				for (Translation translation : fallbackLang.translations)
+					if (translation.getKey().equals(target))
 					{
-						for (Translation translation : fallbackLang.translations)
-						{
-							if (translation.getKey().equals(target))
-							{
-								gui.txtTranslationFallback.setText(translation.getTranslation());
-							}
-						}
+						gui.txtTranslationFallback.setText(translation.getTranslation());
 					}
-					gui.tableModelClasses.setContent(project.sources, target, projectPath);
-					gui.tableModelMisc.setContent(project.misc, target, projectPath);
-					gui.btnRemove.setEnabled(true);
-				}
-			}
+				
+			gui.tableModelClasses.setContent(project.sources, target, projectPath);
+			gui.tableModelMisc.setContent(project.misc, target, projectPath);
+			gui.btnRemove.setEnabled(true);
 		}));
 	}
 	
@@ -384,13 +370,9 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			if (selected != null
 					&& project.selectedLanguage != null
 					&& !project.selectedLanguage.equals(selected.getName()))
-			{
 				project.selectedLanguage = selected.getName();
-			}
 			else
-			{
 				project.selectedLanguage = null;
-			}
 			
 			if (selected != null)
 			{
@@ -420,22 +402,16 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				{
 					Translatable translatable = gui.tableModel.getTranslatable(row);
 					if (translatable instanceof Translation)
-					{
 						for (Translation t : selected.translations)
-						{
 							if (t.getKey().equals(translatable.getKey()))
 							{
 								gui.txtTranslationFallback.setText(t.getTranslation());
 								break;
 							}
-						}
-					}
 				}
 			}
 			else
-			{
 				project.fallback = null;
-			}
 			updateSwapButton(gui);
 		}));
 	}
@@ -446,22 +422,21 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		{
 			int	selection	= gui.table.getSelectedRow();
 			int	tableSize	= gui.tableModel.getRowCount();
-			if (LimitInt.inRange(0, selection, tableSize - 1))
+			if (!LimitInt.inRange(0, selection, tableSize - 1))
+				return;
+			
+			String target = gui.tableModel.getStringAt(selection, 1);
+			gui.tableModel.removeRow(selection);
+			remove(target);
+			((Language) gui.comboBoxLanguage.getSelectedItem()).dirty(true);
+			tableSize--;
+			
+			if (selection < tableSize)
+				gui.table.setRowSelectionInterval(selection, selection);
+			else if (selection > 0)
 			{
-				String target = gui.tableModel.getStringAt(selection, 1);
-				gui.tableModel.removeRow(selection);
-				remove(target);
-				((Language) gui.comboBoxLanguage.getSelectedItem()).dirty(true);
-				tableSize--;
-				if (selection < tableSize)
-				{
-					gui.table.setRowSelectionInterval(selection, selection);
-				}
-				else if (selection > 0)
-				{
-					selection--;
-					gui.table.setRowSelectionInterval(selection, selection);
-				}
+				selection--;
+				gui.table.setRowSelectionInterval(selection, selection);
 			}
 		});
 	}
@@ -480,10 +455,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	
 	private void disableApply()
 	{
-		gui.if_(gui ->
-		{
-			gui.btnApply.setEnabled(false);
-		});
+		gui.if_(gui -> gui.btnApply.setEnabled(false));
 	}
 	
 	void changePinned(ActionEvent ae)
@@ -513,9 +485,8 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			Localizer4J.prefs.history.recent.remove(file.getPath());
 			Localizer4J.prefs.history.recent.addFirst(file.getPath());
 			while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
-			{
 				Localizer4J.prefs.history.recent.removeLast();
-			}
+			
 			updateRecent();
 		});
 	}
@@ -529,9 +500,8 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	
 	private void createNewProject(GuiCloseEvent<ProjectConfig> event)
 	{
-		gui.filter(gui -> event.success()).if_(gui ->
-		{
-			event.getReturnValue().if_(project ->
+		gui.filter(gui -> event.success())
+			.if_(gui -> event.getReturnValue().if_(project ->
 			{
 				this.project = Opt.of(project);
 				
@@ -558,8 +528,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				gui.mntmProjectSettings.setEnabled(true);
 				
 				updateSwapButton(gui);
-			});
-		});
+			}));
 	}
 	
 	void openProject(ActionEvent ae)
@@ -586,9 +555,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			chooser.setFileFilter(filter);
 			int resultCode = chooser.showDialog(gui, l10n.localize("FileBrowser.open"));
 			if (resultCode == JFileChooser.APPROVE_OPTION)
-			{
 				openProject(chooser.getSelectedFile());
-			}
 		});
 	}
 	
@@ -597,29 +564,26 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		System.out.println("importing " + files.length + " files.");
 		Arrays.stream(files)
 			.filter(f -> !project.languages.containsKey(f.getName()))
-			.forEach(f ->
+			.forEach(f -> new Thread(() ->
 			{
-				new Thread(() ->
-				{
-					final var selected	= (Language) gui.comboBoxLanguage.getSelectedItem();
-					final var fallback	= (Language) gui.comboBoxFallback.getSelectedItem();
-					
-					final var langName		= f.getName().substring(0, f.getName().indexOf('.'));
-					final var fileSettings	= project.fileSettings;
-					final var loader		= fileSettings.languageFileType.createLoader(fileSettings);
-					final var extension		= project.fileSettings.languageFileType.extension(project.fileSettings);
-					
-					final var language = project.loadLanguage(langName, extension, loader);
-					
-					gui.comboBoxLanguage.addItem(language);
-					gui.comboBoxFallback.addItem(language);
-					
-					if (selected != null)
-						gui.comboBoxLanguage.setSelectedItem(selected);
-					if (fallback != null)
-						gui.comboBoxFallback.setSelectedItem(fallback);
-				}).start();
-			});
+				final var selected	= (Language) gui.comboBoxLanguage.getSelectedItem();
+				final var fallback	= (Language) gui.comboBoxFallback.getSelectedItem();
+				
+				final var langName		= f.getName().substring(0, f.getName().indexOf('.'));
+				final var fileSettings	= project.fileSettings;
+				final var loader		= fileSettings.languageFileType.createLoader(fileSettings);
+				final var extension		= project.fileSettings.languageFileType.extension(project.fileSettings);
+				
+				final var language = project.loadLanguage(langName, extension, loader);
+				
+				gui.comboBoxLanguage.addItem(language);
+				gui.comboBoxFallback.addItem(language);
+				
+				if (selected != null)
+					gui.comboBoxLanguage.setSelectedItem(selected);
+				if (fallback != null)
+					gui.comboBoxFallback.setSelectedItem(fallback);
+			}).start());
 	}
 	
 	void openProject(File projectFile)
@@ -695,22 +659,15 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		{
 			Language fallbackLang = (Language) gui.comboBoxFallback.getSelectedItem();
 			if (fallbackLang != null)
-			{
 				project.fallback = fallbackLang.getName();
-			}
 			else
-			{
 				project.fallback = null;
-			}
+			
 			Language selectedLang = (Language) gui.comboBoxLanguage.getSelectedItem();
 			if (selectedLang != null)
-			{
 				project.selectedLanguage = selectedLang.getName();
-			}
 			else
-			{
 				project.selectedLanguage = null;
-			}
 			
 			project.saveLanguages();
 			project.save();
@@ -738,18 +695,18 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		{
 			String key = gui.txtAddKey.getText();
 			gui.txtAddKey.setText("");
-			if (StringUtils.isNotBlank(key))
-			{
-				Language lang = (Language) gui.comboBoxLanguage.getSelectedItem();
-				if (lang != null)
-				{
-					Translation translatable = new Translation(key);
-					lang.translations.add(translatable);
-					lang.dirty(true);
-					gui.tableModel.recalculate();
-					setSelection(key);
-				}
-			}
+			if (!StringUtils.isNotBlank(key))
+				return;
+			
+			Language lang = (Language) gui.comboBoxLanguage.getSelectedItem();
+			if (lang == null)
+				return;
+			
+			Translation translatable = new Translation(key);
+			lang.translations.add(translatable);
+			lang.dirty(true);
+			gui.tableModel.recalculate();
+			setSelection(key);
 		}));
 	}
 	
@@ -766,6 +723,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			final int target = gui.tableModel.find(selection);
 			if (target == -1)
 				return;
+			
 			gui.table.setRowSelectionInterval(target, target);
 			final var	viewport	= (JViewport) gui.table.getParent();
 			final var	rect		= gui.table.getCellRect(target, 1, true);
