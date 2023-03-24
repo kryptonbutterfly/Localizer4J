@@ -561,9 +561,13 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	
 	private void importFiles(MainGui gui, ProjectConfig project, File[] files)
 	{
-		System.out.println("importing " + files.length + " files.");
+		final String extension = project.fileSettings.languageFileType.extension(project.fileSettings);
 		Arrays.stream(files)
-			.filter(f -> !project.languages.containsKey(f.getName()))
+			.filter(f ->
+			{
+				final var name = f.getName();
+				return !project.languages.containsKey(name.substring(0, name.length() - extension.length()));
+			})
 			.forEach(f -> new Thread(() ->
 			{
 				final var selected	= (Language) gui.comboBoxLanguage.getSelectedItem();
@@ -572,7 +576,6 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				final var langName		= f.getName().substring(0, f.getName().indexOf('.'));
 				final var fileSettings	= project.fileSettings;
 				final var loader		= fileSettings.languageFileType.createLoader(fileSettings);
-				final var extension		= project.fileSettings.languageFileType.extension(project.fileSettings);
 				
 				final var language = project.loadLanguage(langName, extension, loader);
 				
