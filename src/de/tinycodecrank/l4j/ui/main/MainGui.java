@@ -67,6 +67,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 	private JMenuItem	mntmGeneralSettings;
 	JMenuItem			mntmProjectSettings;
 	JMenuItem			mntmSaveProject;
+	JMenuItem			mntmSearch;
 	
 	JToggleButton pin;
 	
@@ -159,6 +160,16 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		mntmSaveProject.setEnabled(false);
 		mnFile.add(mntmSaveProject);
 		businessLogic.if_(bl -> mntmSaveProject.addActionListener(bl::saveProject));
+		
+		var mnEdit = new JMenu();
+		reg("Main.Menu.Edit", mnEdit::setText);
+		menuBar.add(mnEdit);
+		
+		mntmSearch = new JMenuItem();
+		reg("Main.Menu.Edit.Find", mntmSearch::setText);
+		mntmSearch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
+		businessLogic.if_(bl -> mntmSearch.addActionListener(bl::search));
+		mnEdit.add(mntmSearch);
 		
 		mnLanguage = new JMenu();
 		reg("Main.Menu.Language", mnLanguage::setText);

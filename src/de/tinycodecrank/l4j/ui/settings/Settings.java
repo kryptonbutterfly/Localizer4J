@@ -46,6 +46,17 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 	private final LocalizingFileType[]			fileTypes;
 	private final BiConsumer<String, String>	langChangeListener;
 	
+	final boolean isGeneral;
+	
+	public Settings(
+		Window owner,
+		ModalityType modality,
+		Consumer<GuiCloseEvent<Void>> closeListener,
+		Localizer l10n)
+	{
+		this(owner, modality, closeListener, Localizer4J.prefs.fileSettings, l10n, true);
+	}
+	
 	public Settings(
 		Window owner,
 		ModalityType modality,
@@ -53,8 +64,20 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		FileSettings fileSettings,
 		Localizer l10n)
 	{
+		this(owner, modality, closeListener, fileSettings, l10n, false);
+	}
+	
+	private Settings(
+		Window owner,
+		ModalityType modality,
+		Consumer<GuiCloseEvent<Void>> closeListener,
+		FileSettings fileSettings,
+		Localizer l10n,
+		boolean isGeneral)
+	{
 		super(owner, modality, closeListener, l10n, fileSettings);
-		this.guiPrefs = fileSettings;
+		this.isGeneral	= isGeneral;
+		this.guiPrefs	= fileSettings;
 		GuiPrefs prefs = Localizer4J.prefs.settingsWindow;
 		
 		reg("Settings.title", this::setTitle);
@@ -135,29 +158,34 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		panelSettings.add(panel_1, BorderLayout.SOUTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
-		JSeparator separator_2 = new JSeparator();
-		panel_1.add(separator_2, BorderLayout.NORTH);
-		
-		JPanel panel_2 = new JPanel();
-		panel_1.add(panel_2, BorderLayout.SOUTH);
-		panel_2.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		JLabel lblHistoryMaxLength = new JLabel();
-		reg("Settings.label.History max length", lblHistoryMaxLength::setText);
-		panel_2.add(lblHistoryMaxLength);
-		
-		spinnerHistoryLength = new JSpinner();
-		spinnerHistoryLength.setModel(new SpinnerNumberModel(Localizer4J.prefs.history.maxLength, 0, 20, 1));
-		panel_2.add(spinnerHistoryLength);
-		
-		JLabel lblUILanguage = new JLabel();
-		reg("Settings.label.UILanguage", lblUILanguage::setText);
-		panel_2.add(lblUILanguage);
-		
-		comboBoxUiLanguage = new JComboBox<>(l10n.manager.languages());
-		comboBoxUiLanguage.setSelectedItem(l10n.currentLanguage());
-		panel_2.add(comboBoxUiLanguage);
-		businessLogic.if_(bl -> comboBoxUiLanguage.addActionListener(bl::setLanguage));
+		// Start exclusive to general settings
+		if (isGeneral)
+		{
+			JSeparator separator_2 = new JSeparator();
+			panel_1.add(separator_2, BorderLayout.NORTH);
+			
+			JPanel panel_2 = new JPanel();
+			panel_1.add(panel_2, BorderLayout.SOUTH);
+			panel_2.setLayout(new GridLayout(0, 2, 0, 0));
+			
+			JLabel lblHistoryMaxLength = new JLabel();
+			reg("Settings.label.History max length", lblHistoryMaxLength::setText);
+			panel_2.add(lblHistoryMaxLength);
+			
+			spinnerHistoryLength = new JSpinner();
+			spinnerHistoryLength.setModel(new SpinnerNumberModel(Localizer4J.prefs.history.maxLength, 0, 20, 1));
+			panel_2.add(spinnerHistoryLength);
+			
+			JLabel lblUILanguage = new JLabel();
+			reg("Settings.label.UILanguage", lblUILanguage::setText);
+			panel_2.add(lblUILanguage);
+			
+			comboBoxUiLanguage = new JComboBox<>(l10n.manager.languages());
+			comboBoxUiLanguage.setSelectedItem(l10n.currentLanguage());
+			panel_2.add(comboBoxUiLanguage);
+			businessLogic.if_(bl -> comboBoxUiLanguage.addActionListener(bl::setLanguage));
+		}
+		// End exclusive to general settings
 		
 		JPanel panelOkAbort = new JPanel();
 		contentPane.add(panelOkAbort, BorderLayout.SOUTH);

@@ -31,6 +31,8 @@ import de.tinycodecrank.l4j.startup.Localizer4J;
 import de.tinycodecrank.l4j.startup.ProgramArgs;
 import de.tinycodecrank.l4j.ui.lang.LangGui;
 import de.tinycodecrank.l4j.ui.project.ProjectGui;
+import de.tinycodecrank.l4j.ui.search.SearchGui;
+import de.tinycodecrank.l4j.ui.search.SearchKeyData;
 import de.tinycodecrank.l4j.ui.settings.Settings;
 import de.tinycodecrank.l4j.util.DocumentListenerAdapter;
 import de.tinycodecrank.l4j.util.KeyEventListener;
@@ -53,6 +55,8 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	
 	private final Localizer l10n;
 	
+	private SearchGui searchGui = null;
+	
 	BusinessLogic(MainGui gui, Localizer l10n)
 	{
 		super(gui);
@@ -61,6 +65,16 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	
 	void init(ProgramArgs args)
 	{
+		gui.if_(
+			gui -> EventQueue.invokeLater(
+				() -> this.searchGui = new SearchGui(
+					gui,
+					ModalityType.MODELESS,
+					e ->
+					{},
+					l10n,
+					new SearchKeyData(gui.table, this::setSelection))));
+		
 		if (args.projectFile == null || args.projectFile.length <= 0)
 			return;
 		
@@ -226,7 +240,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	void showGeneralOptions(ActionEvent ae)
 	{
 		gui.if_(gui -> new Settings(gui, ModalityType.APPLICATION_MODAL, event ->
-		{}, Localizer4J.prefs.fileSettings, l10n));
+		{}, l10n));
 	}
 	
 	KeyListener changeTranslation_Enter()
@@ -790,6 +804,15 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	{
 		gui.btnSwap.setEnabled(
 			gui.comboBoxLanguage.getSelectedItem() != null && gui.comboBoxFallback.getSelectedItem() != null);
+	}
+	
+	void search(ActionEvent ae)
+	{
+		gui.if_(gui ->
+		{
+			searchGui.setVisible(true);
+			searchGui.requestFocus();
+		});
 	}
 	
 	private void setSelection(String selection)

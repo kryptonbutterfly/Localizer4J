@@ -12,7 +12,7 @@ public class Prefs extends FileConfig
 	{
 		super(config);
 	}
-
+	
 	@Value
 	public GuiPrefs mainWindow = new GuiPrefs(100, 100, 810, 442, Frame.MAXIMIZED_BOTH);
 	
@@ -24,6 +24,9 @@ public class Prefs extends FileConfig
 	
 	@Value
 	public GuiPrefs newProjectWindow = new GuiPrefs(100, 100, 550, 450, Frame.NORMAL);
+	
+	@Value
+	public GuiPrefs searchWindow = new GuiPrefs(100, 100, 450, 300, Frame.NORMAL);
 	
 	@Value
 	public FileSettings fileSettings = new FileSettings();

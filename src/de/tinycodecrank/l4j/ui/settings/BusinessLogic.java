@@ -46,12 +46,15 @@ final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
 			fileSettings.langFileExtension		= langFileExtension;
 			fileSettings.localizationDelimiter	= gui.textField_1.getText().trim();
 			fileSettings.versionListFile		= gui.chckbxSaveVersionFile.isSelected();
-			Localizer4J.prefs.history.maxLength	= (int) gui.spinnerHistoryLength.getModel().getValue();
-			
-			while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
-				Localizer4J.prefs.history.recent.removeLast();
-			
-			Localizer4J.prefs.language = gui.localizer().currentLanguage();
+			if (gui.isGeneral)
+			{
+				Localizer4J.prefs.history.maxLength = (int) gui.spinnerHistoryLength.getModel().getValue();
+				
+				while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
+					Localizer4J.prefs.history.recent.removeLast();
+				
+				Localizer4J.prefs.language = gui.localizer().currentLanguage();
+			}
 			gui.dispose();
 		});
 	}
