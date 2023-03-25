@@ -3,15 +3,11 @@ package de.tinycodecrank.l4j.data.gui;
 import java.awt.Color;
 import java.util.Objects;
 
-import org.apache.commons.text.similarity.LevenshteinDistance;
-
 import de.tinycodecrank.l4j.util.ColorUtils;
 import de.tinycodecrank.l4j.util.Constants;
 
 public abstract class Translatable implements Comparable<Translatable>, Constants
 {
-	private static final LevenshteinDistance distance = new LevenshteinDistance(5);
-	
 	private String				key;
 	private TranslationState	state;
 	
@@ -40,12 +36,6 @@ public abstract class Translatable implements Comparable<Translatable>, Constant
 				return stateDiff;
 			}
 		}
-	}
-	
-	public int getDistance(String key)
-	{
-		Objects.requireNonNull(key);
-		return distance.apply(key, this.key);
 	}
 	
 	public final String getKey()

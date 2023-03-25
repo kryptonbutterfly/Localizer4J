@@ -7,11 +7,10 @@ A Language file Editor with special sauce for java projects.
 
 java version | app version | jar | deb
 :----------: | :---------: | :-: | :-:
-18+          | 2.3.0       | [Localizer4J.jar](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.3.0/Localizer4J.jar) | [Localizer4J-2.3.0.deb](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.3.0/Localizer4J-2.3.0.deb)
+18+          | 2.4.0       | [Localizer4J.jar](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.4.0/Localizer4J.jar) | [Localizer4J-2.4.0.deb](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.4.0/Localizer4J-2.4.0.deb)
 
 ## Dependencies
 
-* [**commons-text-1.9.jar**](https://repo1.maven.org/maven2/org/apache/commons/commons-text/1.9/commons-text-1.9.jar)
 * [**gson.jar**](https://search.maven.org/remotecontent?filepath=com/google/code/gson/gson/2.10.1/gson-2.10.1.jar)
 * [**tinyArgsManager.jar**](https://github.com/tinycodecrank/tinyArgsManager/releases/download/v0.1.0/tinyArgsmanager.jar)
 * [**BoundedValues.jar**](https://github.com/tinycodecrank/BoundedValues/releases/download/v1.0.0/BoundedValues.jar)

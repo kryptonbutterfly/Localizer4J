@@ -1,11 +1,12 @@
 package de.tinycodecrank.l4j.ui.search;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.function.BiFunction;
 
-import javax.swing.JTextField;
-
+import de.tinycodecrank.functions.UnaryOperator;
 import de.tinycodecrank.l4j.startup.Localizer4J;
+import de.tinycodecrank.l4j.util.StringUtils;
+import de.tinycodecrank.monads.opt.Opt;
 import de.tinycodecrank.util.swing.DialogLogicTemplate;
 
 final class BL extends DialogLogicTemplate<SearchGui, SearchKeyData>
@@ -18,9 +19,19 @@ final class BL extends DialogLogicTemplate<SearchGui, SearchKeyData>
 		this.data = data;
 	}
 	
-	ActionListener search(JTextField text)
+	void search(ActionEvent ae)
 	{
-		return ae -> data.setSelection().accept(text.getText());
+		gui.if_(gui ->
+		{
+			final UnaryOperator<String> transformer = gui.keyTab.chckbxCaseSensitive.isSelected()
+				? UnaryOperator.identity()
+					: String::toLowerCase;
+			
+			BiFunction<String, String, Opt<Integer>> search = (left, right) -> StringUtils
+				.matchOffset(left, transformer.apply(right));
+			
+			data.setSelection().accept(transformer.apply(gui.keyTab.txtSearch.getText()), search);
+		});
 	}
 	
 	void abort(ActionEvent ae)

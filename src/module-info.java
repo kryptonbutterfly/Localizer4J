@@ -29,7 +29,6 @@ module de.tinycodecrank.Localizer4J
 	requires transitive java.desktop;
 	requires java.xml;
 	requires de.tinycodecrank.mathUtils;
-	requires org.apache.commons.text;
 	requires de.tinycodecrank.JavaLexer;
 	requires com.google.gson;
 	requires de.tinycodecrank.Functional;

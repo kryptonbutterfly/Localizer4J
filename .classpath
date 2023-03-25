@@ -72,12 +72,6 @@
 			<attribute name="add-opens" value="java.desktop/sun.awt.X11=de.tinycodecrank.ReflectionUtils"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="dep/commons-text-1.9.jar" sourcepath="dep/commons-text-1.9-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Localizer4J/dep/commons-text-1.9-javadoc.jar!/"/>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="dep/gson-2.10.1.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Localizer4J/dep/gson-2.10.1-javadoc.jar!/"/>

@@ -11,6 +11,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import javax.swing.JFileChooser;
@@ -73,7 +74,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 					e ->
 					{},
 					l10n,
-					new SearchKeyData(gui.table, this::setSelection))));
+					new SearchKeyData(gui.table, this::searchKey))));
 		
 		if (args.projectFile == null || args.projectFile.length <= 0)
 			return;
@@ -755,15 +756,23 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 		return e -> gui.if_(gui ->
 		{
 			final String searchText = gui.txtAddKey.getText();
-			if (!StringUtils.isNotEmpty(searchText))
-				return;
-			
+			searchKey(searchText, StringUtils::camelDistance);
+		});
+	}
+	
+	private void searchKey(String search, BiFunction<String, String, Opt<Integer>> distanceFunction)
+	{
+		if (!StringUtils.isNotBlank(search))
+			return;
+		
+		gui.map(gui ->
+		{
 			int		distance	= Integer.MAX_VALUE;
 			String	match		= null;
 			for (int row : range(gui.tableModel.getRowCount()))
 			{
 				final var	translatable	= gui.tableModel.getTranslatable(row);
-				final var	dist			= StringUtils.camelDistance(searchText, translatable.getKey());
+				final var	dist			= distanceFunction.apply(search, translatable.getKey());
 				if (dist.isPresent())
 				{
 					int intDist = dist.get(() -> Integer.MAX_VALUE);
@@ -774,8 +783,10 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 					}
 				}
 			}
-			if (match != null)
-				setSelection(match);
+			return match;
+		}).if_(s ->
+		{
+			setSelection(s);
 		});
 	}
 	

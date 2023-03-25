@@ -32,4 +32,16 @@ public final class StringUtils
 		}
 		return Opt.of(difference + target.length());
 	}
+	
+	public static Opt<Integer> matchOffset(String search, String target)
+	{
+		if (search.length() > target.length())
+			return Opt.empty();
+		
+		final int index = target.indexOf(search);
+		if (index == -1)
+			return Opt.empty();
+		
+		return Opt.of(target.substring(index + search.length()).length());
+	}
 }

@@ -17,24 +17,24 @@ import de.tinycodecrank.util.swing.ApplyAbortPanel;
 
 final class KeyTab
 {
-	static JPanel buildKeyTab(
-		SearchGui gui,
-		Opt<BL> bL,
-		GuiPrefs guiPrefs,
-		BiConsumer<String, Consumer<String>> reg)
+	final JTextField	txtSearch;
+	final JPanel		panel;
+	final JCheckBox		chckbxCaseSensitive;
+	
+	KeyTab(SearchGui gui, Opt<BL> bL, GuiPrefs guiPrefs, BiConsumer<String, Consumer<String>> reg)
 	{
 		final var panelContent = Box.createVerticalBox();
 		
-		final var txtSearch = new JTextField();
+		txtSearch = new JTextField();
 		panelContent.add(txtSearch, BorderLayout.CENTER);
 		
-		final var	panelSettings		= Box.createVerticalBox();
-		final var	chckbxCaseSensitive	= new JCheckBox();
+		final var panelSettings = Box.createVerticalBox();
+		chckbxCaseSensitive = new JCheckBox();
 		chckbxCaseSensitive.setRolloverEnabled(true);
 		reg.accept("Search.Checkbox.Case Sensitive", chckbxCaseSensitive::setText);
 		panelSettings.add(chckbxCaseSensitive);
 		
-		final var panel = new JPanel(new BorderLayout());
+		panel = new JPanel(new BorderLayout());
 		panel.add(panelContent, BorderLayout.CENTER);
 		panel.add(panelSettings, BorderLayout.EAST);
 		
@@ -42,13 +42,12 @@ final class KeyTab
 		{
 			final var applyAbortPanel = new ApplyAbortPanel(
 				buttonSearch,
-				bl.search(txtSearch),
+				bl::search,
 				buttonCancel,
 				bl::abort);
 			reg.accept(buttonSearch, applyAbortPanel.btnButton1::setText);
 			reg.accept(buttonCancel, applyAbortPanel.btnButton2::setText);
 			panel.add(applyAbortPanel, BorderLayout.SOUTH);
 		});
-		return panel;
 	}
 }

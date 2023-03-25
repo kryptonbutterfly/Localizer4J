@@ -17,6 +17,8 @@ public final class SearchGui extends ObservableLangDialog<BL, Void, SearchKeyDat
 	static final String	buttonSearch	= "Search.button.search";
 	static final String	buttonCancel	= "Search.button.cancel";
 	
+	final KeyTab keyTab;
+	
 	public SearchGui(
 		Window owner,
 		ModalityType modality,
@@ -36,7 +38,8 @@ public final class SearchGui extends ObservableLangDialog<BL, Void, SearchKeyDat
 		final var tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		setContentPane(tabbedPane);
 		
-		tabbedPane.addTab(null, KeyTab.buildKeyTab(this, businessLogic, guiPrefs, this::reg));
+		keyTab = new KeyTab(this, businessLogic, guiPrefs, this::reg);
+		tabbedPane.addTab(null, keyTab.panel);
 		reg("Search.Tab.Key", s -> tabbedPane.setTitleAt(0, s));
 		tabbedPane.setEnabledAt(0, true);
 	}
