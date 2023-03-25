@@ -12,15 +12,25 @@ import de.tinycodecrank.collections.ArrayUtils;
 @FunctionalInterface
 public interface KeyEventListener extends Predicate<KeyEvent>
 {
+	public static KeyListener createUnrestricted(KeyEventType type, KeyEventListener listener)
+	{
+		return create(type, e ->
+		{
+			if (!e.isConsumed())
+				if (listener.test(e))
+					e.consume();
+		});
+	}
 	
 	public static KeyListener create(KeyEventType type, KeyEventListener listener, int... keys)
 	{
 		Arrays.sort(keys);
 		return create(type, e ->
 		{
-			if (ArrayUtils.find(keys, e.getExtendedKeyCode()) != -1)
-				if (listener.test(e))
-					e.consume();
+			if (!e.isConsumed())
+				if (ArrayUtils.find(keys, e.getExtendedKeyCode()) != -1)
+					if (listener.test(e))
+						e.consume();
 		});
 	}
 	
@@ -29,10 +39,11 @@ public interface KeyEventListener extends Predicate<KeyEvent>
 		Arrays.sort(keys);
 		return create(type, e ->
 		{
-			if (mask == e.getModifiersEx())
-				if (ArrayUtils.find(keys, e.getExtendedKeyCode()) != -1)
-					if (listener.test(e))
-						e.consume();
+			if (!e.isConsumed())
+				if (mask == e.getModifiersEx())
+					if (ArrayUtils.find(keys, e.getExtendedKeyCode()) != -1)
+						if (listener.test(e))
+							e.consume();
 		});
 	}
 	

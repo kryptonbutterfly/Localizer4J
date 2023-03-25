@@ -9,11 +9,11 @@
         <languages type="0">
             <item>
                 <key type="1" value="en_US"/>
-                <value type="2" value="24"/>
+                <value type="2" value="25"/>
             </item>
             <item>
                 <key type="1" value="de_DE"/>
-                <value type="2" value="6"/>
+                <value type="2" value="7"/>
             </item>
         </languages>
     </config>

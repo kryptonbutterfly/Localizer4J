@@ -41,6 +41,7 @@ Main.title = Localizations
 New Project.button.accept = Accept
 New Project.button.browse = Browse…
 New Project.button.cancle = Cancle
+New Project.fileChooser.selectFolder.button_approve = Select
 New Project.label.Create lang_version.xml = Create lang_versions.xml:
 New Project.label.File extension = File extension:
 New Project.label.File type = File type:

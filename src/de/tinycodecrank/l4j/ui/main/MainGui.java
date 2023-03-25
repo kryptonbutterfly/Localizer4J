@@ -31,7 +31,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import de.tinycodecrank.i18n.Localizer;
 import de.tinycodecrank.l4j.data.gui.Translatable.TranslationState;
@@ -45,6 +44,7 @@ import de.tinycodecrank.l4j.ui.main.parts.TableModelClasses;
 import de.tinycodecrank.l4j.ui.main.parts.TableModelMisc;
 import de.tinycodecrank.l4j.ui.main.parts.TranslationTableCellRenderer;
 import de.tinycodecrank.l4j.util.ColorUtils;
+import de.tinycodecrank.l4j.util.DocumentListenerAdapter;
 import de.tinycodecrank.l4j.util.ObservableLangGui;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 
@@ -277,6 +277,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		txtAddKey.setEnabled(false);
 		businessLogic.if_(bl -> txtAddKey.addKeyListener(bl.addKey_Enter()));
 		businessLogic.if_(bl -> txtAddKey.addKeyListener(bl.addKey_Escape()));
+		businessLogic.if_(bl -> txtAddKey.getDocument().addDocumentListener(bl.addKey_Search()));
 		
 		btnAddKey = new JButton();
 		reg("Main.button.add", btnAddKey::setText);
@@ -363,26 +364,10 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		txtTranslation.setWrapStyleWord(true);
 		txtTranslation.setLineWrap(true);
 		panelTranslationGrid.add(txtTranslation);
-		txtTranslation.getDocument().addDocumentListener(new DocumentListener()
 		{
-			@Override
-			public void removeUpdate(DocumentEvent e)
-			{
-				btnApply.setEnabled(true);
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e)
-			{
-				btnApply.setEnabled(true);
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e)
-			{
-				btnApply.setEnabled(true);
-			}
-		});
+			final Consumer<DocumentEvent> l = e -> btnApply.setEnabled(true);
+			txtTranslation.getDocument().addDocumentListener(new DocumentListenerAdapter(l, l, l));
+		}
 		businessLogic.if_(bl -> txtTranslation.addKeyListener(bl.changeTranslation_Enter()));
 		businessLogic.if_(bl -> txtTranslation.addKeyListener(bl.changeTranslation_Escape()));
 		

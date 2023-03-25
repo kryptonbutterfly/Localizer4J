@@ -41,6 +41,7 @@ Main.title = Übersetzungen
 New Project.button.accept = Übernehmen
 New Project.button.browse = Durchsuchen…
 New Project.button.cancle = Abbrechen
+New Project.fileChooser.selectFolder.button_approve = Auswählen
 New Project.label.Create lang_version.xml = Erstelle lang_version.xml:
 New Project.label.File extension = Dateiendung:
 New Project.label.File type = Dateityp:

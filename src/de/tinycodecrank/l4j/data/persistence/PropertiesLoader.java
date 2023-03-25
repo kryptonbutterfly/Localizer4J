@@ -19,9 +19,6 @@ public class PropertiesLoader implements LanguageLoader
 			Properties props = new Properties();
 			props.load(iStream);
 			props.forEach((key, value) -> language.translations.add(new Translation((String) key, (String) value)));
-			// for (Entry<Object, Object> entry : props.entrySet())
-			// language.translations.add(new Translation((String) entry.getKey(), (String)
-			// entry.getValue()));
 		}
 		catch (IOException e)
 		{

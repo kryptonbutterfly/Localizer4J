@@ -7,7 +7,7 @@ A Language file Editor with special sauce for java projects.
 
 java version | app version | jar | deb
 :----------: | :---------: | :-: | :-:
-18+          | 2.2.0       | [Localizer4J.jar](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.2.0/Localizer4J.jar) | [Localizer4J-2.2.0.deb](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.2.0/Localizer4J-2.2.0.deb)
+18+          | 2.3.0       | [Localizer4J.jar](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.3.0/Localizer4J.jar) | [Localizer4J-2.3.0.deb](https://github.com/tinycodecrank/Localizer4J/releases/download/v2.3.0/Localizer4J-2.3.0.deb)
 
 ## Dependencies
 

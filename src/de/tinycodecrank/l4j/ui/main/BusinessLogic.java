@@ -1,5 +1,7 @@
 package de.tinycodecrank.l4j.ui.main;
 
+import static de.tinycodecrank.math.utils.range.Range.*;
+
 import java.awt.Cursor;
 import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
@@ -9,10 +11,12 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
-import javax.swing.JViewport;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.filechooser.FileFilter;
 
@@ -28,6 +32,7 @@ import de.tinycodecrank.l4j.startup.ProgramArgs;
 import de.tinycodecrank.l4j.ui.lang.LangGui;
 import de.tinycodecrank.l4j.ui.project.ProjectGui;
 import de.tinycodecrank.l4j.ui.settings.Settings;
+import de.tinycodecrank.l4j.util.DocumentListenerAdapter;
 import de.tinycodecrank.l4j.util.KeyEventListener;
 import de.tinycodecrank.l4j.util.KeyEventType;
 import de.tinycodecrank.l4j.util.Sneaky;
@@ -725,6 +730,41 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 			KeyEvent.VK_ESCAPE);
 	}
 	
+	DocumentListener addKey_Search()
+	{
+		final var listener = create_addKey_Search();
+		return new DocumentListenerAdapter(listener, listener, listener);
+	}
+	
+	private Consumer<DocumentEvent> create_addKey_Search()
+	{
+		return e -> gui.if_(gui ->
+		{
+			final String searchText = gui.txtAddKey.getText();
+			if (!StringUtils.isNotEmpty(searchText))
+				return;
+			
+			int		distance	= Integer.MAX_VALUE;
+			String	match		= null;
+			for (int row : range(gui.tableModel.getRowCount()))
+			{
+				final var	translatable	= gui.tableModel.getTranslatable(row);
+				final var	dist			= StringUtils.camelDistance(searchText, translatable.getKey());
+				if (dist.isPresent())
+				{
+					int intDist = dist.get(() -> Integer.MAX_VALUE);
+					if (intDist < distance)
+					{
+						distance	= intDist;
+						match		= translatable.getKey();
+					}
+				}
+			}
+			if (match != null)
+				setSelection(match);
+		});
+	}
+	
 	void addKey(ActionEvent ae)
 	{
 		gui.if_(gui -> project.if_(project ->
@@ -754,6 +794,7 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 	
 	private void setSelection(String selection)
 	{
+		final int paddingVertical = 20;
 		gui.if_(gui ->
 		{
 			final int target = gui.tableModel.find(selection);
@@ -761,12 +802,8 @@ class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
 				return;
 			
 			gui.table.setRowSelectionInterval(target, target);
-			final var	viewport	= (JViewport) gui.table.getParent();
-			final var	rect		= gui.table.getCellRect(target, 1, true);
-			final var	offset		= viewport.getViewPosition();
-			final int	x			= rect.x - offset.x;
-			final int	y			= rect.y - offset.y;
-			rect.setLocation(x, y);
+			final var rect = gui.table.getCellRect(target, 1, true);
+			rect.grow(0, paddingVertical);
 			gui.table.scrollRectToVisible(rect);
 		});
 	}
