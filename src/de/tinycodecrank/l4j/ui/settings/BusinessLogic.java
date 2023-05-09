@@ -5,9 +5,9 @@ import java.awt.event.ActionEvent;
 import de.tinycodecrank.l4j.prefs.FileSettings;
 import de.tinycodecrank.l4j.prefs.FileType.LocalizingFileType;
 import de.tinycodecrank.l4j.startup.Localizer4J;
-import de.tinycodecrank.util.swing.DialogLogicTemplate;
+import de.tinycodecrank.util.swing.Logic;
 
-final class BusinessLogic extends DialogLogicTemplate<Settings, FileSettings>
+final class BusinessLogic extends Logic<Settings, FileSettings>
 {
 	private final FileSettings fileSettings;
 	

@@ -3,11 +3,11 @@ package de.tinycodecrank.l4j.util;
 import java.util.function.Consumer;
 
 import de.tinycodecrank.i18n.Localizer;
-import de.tinycodecrank.util.swing.BusinessLogicTemplate;
+import de.tinycodecrank.util.swing.Logic;
 import de.tinycodecrank.util.swing.ObservableGui;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 
-public abstract class ObservableLangGui<Logic extends BusinessLogicTemplate<?, Args>, R, Args> extends ObservableGui<Logic, R, Args>
+public abstract class ObservableLangGui<BL extends Logic<?, Args>, R, Args> extends ObservableGui<BL, R, Args>
 {
 	private static final long serialVersionUID = 1L;
 	

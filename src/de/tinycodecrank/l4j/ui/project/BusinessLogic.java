@@ -11,11 +11,11 @@ import de.tinycodecrank.l4j.prefs.FileType.LocalizingFileType;
 import de.tinycodecrank.l4j.startup.Localizer4J;
 import de.tinycodecrank.l4j.util.Constants;
 import de.tinycodecrank.monads.opt.Opt;
-import de.tinycodecrank.util.swing.DialogLogicTemplate;
+import de.tinycodecrank.util.swing.Logic;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent.Result;
 
-final class BusinessLogic extends DialogLogicTemplate<ProjectGui, Void>
+final class BusinessLogic extends Logic<ProjectGui, Void>
 {
 	private Opt<File>	projectFolder	= Opt.empty();
 	private Opt<File>	languageFolder	= Opt.empty();

@@ -42,10 +42,10 @@ import de.tinycodecrank.l4j.util.Sneaky;
 import de.tinycodecrank.l4j.util.StringUtils;
 import de.tinycodecrank.math.utils.limit.LimitInt;
 import de.tinycodecrank.monads.opt.Opt;
-import de.tinycodecrank.util.swing.BusinessLogicTemplate;
+import de.tinycodecrank.util.swing.Logic;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 
-class BusinessLogic extends BusinessLogicTemplate<MainGui, Localizer>
+class BusinessLogic extends Logic<MainGui, Localizer>
 {
 	private String				projectPath	= "";
 	private Opt<ProjectConfig>	project		= Opt.empty();

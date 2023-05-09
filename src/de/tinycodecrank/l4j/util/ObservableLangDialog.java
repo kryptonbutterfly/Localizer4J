@@ -4,12 +4,12 @@ import java.awt.Window;
 import java.util.function.Consumer;
 
 import de.tinycodecrank.i18n.Localizer;
-import de.tinycodecrank.util.swing.DialogLogicTemplate;
+import de.tinycodecrank.util.swing.Logic;
 import de.tinycodecrank.util.swing.ObservableDialog;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 
 @SuppressWarnings("serial")
-public abstract class ObservableLangDialog<Logic extends DialogLogicTemplate<?, Args>, R, Args> extends ObservableDialog<Logic, R, Args>
+public abstract class ObservableLangDialog<BL extends Logic<?, Args>, R, Args> extends ObservableDialog<BL, R, Args>
 {
 	protected final LangManager langManager;
 	

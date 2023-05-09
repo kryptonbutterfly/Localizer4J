@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 
 import de.tinycodecrank.l4j.startup.Localizer4J;
 import de.tinycodecrank.monads.opt.Opt;
-import de.tinycodecrank.util.swing.DialogLogicTemplate;
+import de.tinycodecrank.util.swing.Logic;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent;
 import de.tinycodecrank.util.swing.events.GuiCloseEvent.Result;
 
-final class BusinessLogic extends DialogLogicTemplate<LangGui, Void>
+final class BusinessLogic extends Logic<LangGui, Void>
 {
 	BusinessLogic(LangGui gui)
 	{

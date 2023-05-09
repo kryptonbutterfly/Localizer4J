@@ -7,9 +7,9 @@ import de.tinycodecrank.functions.UnaryOperator;
 import de.tinycodecrank.l4j.startup.Localizer4J;
 import de.tinycodecrank.l4j.util.StringUtils;
 import de.tinycodecrank.monads.opt.Opt;
-import de.tinycodecrank.util.swing.DialogLogicTemplate;
+import de.tinycodecrank.util.swing.Logic;
 
-final class BL extends DialogLogicTemplate<SearchGui, SearchKeyData>
+final class BL extends Logic<SearchGui, SearchKeyData>
 {
 	private SearchKeyData data;
 	

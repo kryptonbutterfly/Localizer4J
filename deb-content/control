@@ -3,4 +3,3 @@ Priority: optional
 Maintainer: tinycodecrank
 Description: Internationalization Tool
 Architecture: all
-Depends: openjdk-18-jre | openjdk-18-jdk
