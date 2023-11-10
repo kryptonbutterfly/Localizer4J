@@ -34,8 +34,8 @@ public class JsonLoader implements LanguageLoader, Constants
 	@Override
 	public void save(Language language, File folder)
 	{
-		final var					file	= compute(language, folder);
-		final var<String, String>	mapping	= new HashMap<String, String>();
+		final var	file	= compute(language, folder);
+		final var	mapping	= new HashMap<String, String>();
 		
 		for (Translation entry : language.translations)
 			mapping.put(entry.getKey(), entry.getTranslation());
