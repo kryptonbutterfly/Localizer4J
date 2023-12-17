@@ -5,3 +5,5 @@
 /dep/
 
 deb-content/changelog
+/target/
+/deb-content/version.txt
