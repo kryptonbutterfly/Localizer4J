@@ -9,7 +9,7 @@
         <jar destfile="build/Localizer4J.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
-                <attribute name="Rsrc-Main-Class" value="de.tinycodecrank.l4j.startup.Localizer4J"/>
+                <attribute name="Rsrc-Main-Class" value="kryptonbutterfly.l4j.startup.Localizer4J"/>
                 <attribute name="Class-Path" value="."/>
                 <attribute name="Rsrc-Class-Path" value="./
                 	commons-text-1.9.jar

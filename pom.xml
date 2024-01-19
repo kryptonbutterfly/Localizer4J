@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.tinycodecrank</groupId>
+	<groupId>kryptonbutterfly</groupId>
 	<artifactId>localizer4j</artifactId>
-	<version>2.4.1</version>
+	<version>3.0.0</version>
 	<name>Localizer4J</name>
 	<description>A localization editor</description>
 
 	<distributionManagement>
 		<repository>
 			<id>github</id>
-			<name>GitHub tinycodecrank Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/tinycodecrank/maven-repo</url>
+			<name>GitHub kryptonbutterfly Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/kryptonbutterfly/maven-repo</url>
 		</repository>
 	</distributionManagement>
 
@@ -23,50 +23,50 @@
 	<repositories>
 		<repository>
 			<id>github</id>
-			<url>https://maven.pkg.github.com/tinycodecrank/maven-repo</url>
+			<url>https://maven.pkg.github.com/kryptonbutterfly/maven-repo</url>
 		</repository>
 	</repositories>
 	
 	<dependencies>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>xml_config_4j</artifactId>
-			<version>2.2.0</version>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>tiny_swing_utils</artifactId>
-			<version>1.0.0</version>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>tiny_system_utils</artifactId>
-			<version>1.0.0</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>io-utils</artifactId>
-			<version>1.0.1</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>localization</artifactId>
-			<version>1.0.1</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>localization-version-config</artifactId>
-			<version>1.0.1</version>
+			<version>2.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>tiny_java_lexer</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>de.tinycodecrank</groupId>
+			<groupId>kryptonbutterfly</groupId>
 			<artifactId>tiny-args-parser</artifactId>
-			<version>0.1.1</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -101,7 +101,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>false</addClasspath>
-							<mainClass>de.tinycodecrank.l4j.startup.Localizer4J</mainClass>
+							<mainClass>kryptonbutterfly.l4j.startup.Localizer4J</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Add-Opens>java.desktop/sun.awt.X11</Add-Opens>
@@ -123,7 +123,7 @@
 							<minimizeJar>true</minimizeJar>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<entryPoints>
-								<entryPoint>de.tinycodecrank.l4j.startup.Localizer4J</entryPoint>
+								<entryPoint>kryptonbutterfly.l4j.startup.Localizer4J</entryPoint>
 							</entryPoints>
 							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}.jar</outputFile>
 						</configuration>
