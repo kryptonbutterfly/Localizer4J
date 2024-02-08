@@ -20,8 +20,8 @@ import kryptonbutterfly.java.lexer.tokens.Comment;
 import kryptonbutterfly.java.lexer.tokens.Section;
 import kryptonbutterfly.java.lexer.tokens.StringLiteral;
 import kryptonbutterfly.l4j.data.index.ProjectStringsIndex;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.prefs.FileSettings;
-import kryptonbutterfly.l4j.startup.Localizer4J;
 import kryptonbutterfly.l4j.util.Constants;
 
 public class ProjectReader implements Constants
@@ -231,6 +231,6 @@ public class ProjectReader implements Constants
 	
 	public static ArrayList<File> findMiscFiles(String path)
 	{
-		return findMiscFiles(new File(path), Localizer4J.prefs.fileSettings);
+		return findMiscFiles(new File(path), Globals.prefs.fileSettings);
 	}
 }

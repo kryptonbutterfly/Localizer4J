@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import kryptonbutterfly.l4j.data.gui.Translation;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.prefs.FileSettings;
-import kryptonbutterfly.l4j.startup.Localizer4J;
 
 public class LangLoader implements LanguageLoader
 {
@@ -37,7 +37,7 @@ public class LangLoader implements LanguageLoader
 						{
 							String	key		= line.substring(0, delimiterIndex);
 							String	value	= line.substring(
-								delimiterIndex + Localizer4J.prefs.fileSettings.localizationDelimiter.length(),
+								delimiterIndex + Globals.prefs.fileSettings.localizationDelimiter.length(),
 								line.length());
 							language.translations.add(new Translation(key.trim(), value.trim()));
 						}

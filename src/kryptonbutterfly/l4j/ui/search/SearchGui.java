@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import javax.swing.JTabbedPane;
 
 import kryptonbutterfly.i18n.Localizer;
-import kryptonbutterfly.l4j.startup.Localizer4J;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.util.ObservableLangDialog;
 import kryptonbutterfly.util.swing.events.GuiCloseEvent;
 
@@ -29,16 +29,14 @@ public final class SearchGui extends ObservableLangDialog<BL, Void, SearchKeyDat
 		super(owner, modality, closeListener, localizer, data);
 		this.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		
-		final var guiPrefs = Localizer4J.prefs.searchWindow;
-		
 		reg("Search.title", this::setTitle);
 		setMinimumSize(new Dimension(300, 175));
-		guiPrefs.setBounds(this);
+		Globals.windowStates.searchWindow.setBounds(this);
 		
 		final var tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		setContentPane(tabbedPane);
 		
-		keyTab = new KeyTab(this, businessLogic, guiPrefs, this::reg);
+		keyTab = new KeyTab(this, businessLogic, this::reg);
 		tabbedPane.addTab(null, keyTab.panel);
 		reg("Search.Tab.Key", s -> tabbedPane.setTitleAt(0, s));
 		tabbedPane.setEnabledAt(0, true);

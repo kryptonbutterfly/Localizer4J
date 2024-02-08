@@ -28,7 +28,7 @@ import kryptonbutterfly.l4j.data.gui.Translatable.TranslationState;
 import kryptonbutterfly.l4j.data.gui.Translation;
 import kryptonbutterfly.l4j.data.persistence.Language;
 import kryptonbutterfly.l4j.data.persistence.LanguageLoader;
-import kryptonbutterfly.l4j.startup.Localizer4J;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.startup.ProgramArgs;
 import kryptonbutterfly.l4j.ui.lang.LangGui;
 import kryptonbutterfly.l4j.ui.project.ProjectGui;
@@ -88,17 +88,13 @@ class BusinessLogic extends Logic<MainGui, Localizer>
 	protected void disposeAction()
 	{
 		gui.if_(gui -> {
-			Localizer4J.prefs.mainWindow.height	= gui.getHeight();
-			Localizer4J.prefs.mainWindow.width	= gui.getWidth();
-			Localizer4J.prefs.mainWindow.posX	= gui.getX();
-			Localizer4J.prefs.mainWindow.posY	= gui.getY();
-			Localizer4J.prefs.mainWindow.state	= gui.getExtendedState();
+			Globals.windowStates.mainWindow.persistBoundsAndState(gui);
 			
-			Localizer4J.prefs.layout.keyTableWidth		= gui.splitPane.getDividerLocation();
-			Localizer4J.prefs.layout.translationHeight	= gui.splitPaneValue.getDividerLocation();
-			Localizer4J.prefs.layout.occurenceHeight	= gui.splitOccurences.getDividerLocation();
+			Globals.windowStates.layout.keyTableWidth		= gui.splitPane.getDividerLocation();
+			Globals.windowStates.layout.translationHeight	= gui.splitPaneValue.getDividerLocation();
+			Globals.windowStates.layout.occurenceHeight		= gui.splitOccurences.getDividerLocation();
 			
-			Localizer4J.prefs.pinnedOnTop = gui.pin.isSelected();
+			Globals.prefs.pinnedOnTop = gui.pin.isSelected();
 		});
 	}
 	
@@ -495,7 +491,7 @@ class BusinessLogic extends Logic<MainGui, Localizer>
 	{
 		gui.if_(gui -> {
 			gui.mnOpenRecent.removeAll();
-			Localizer4J.prefs.history.recent.forEach(location -> {
+			Globals.prefs.history.recent.forEach(location -> {
 				File		file	= new File(location);
 				JMenuItem	item	= new JMenuItem(location);
 				item.addActionListener(ae -> openProject(file));
@@ -507,10 +503,10 @@ class BusinessLogic extends Logic<MainGui, Localizer>
 	private void addRecent(File file)
 	{
 		gui.if_(gui -> {
-			Localizer4J.prefs.history.recent.remove(file.getPath());
-			Localizer4J.prefs.history.recent.addFirst(file.getPath());
-			while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
-				Localizer4J.prefs.history.recent.removeLast();
+			Globals.prefs.history.recent.remove(file.getPath());
+			Globals.prefs.history.recent.addFirst(file.getPath());
+			while (Globals.prefs.history.recent.size() > Globals.prefs.history.maxLength)
+				Globals.prefs.history.recent.removeLast();
 			
 			updateRecent();
 		});

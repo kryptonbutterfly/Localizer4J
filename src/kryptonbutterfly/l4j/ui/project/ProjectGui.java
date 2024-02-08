@@ -23,9 +23,9 @@ import javax.swing.border.TitledBorder;
 
 import kryptonbutterfly.i18n.Localizer;
 import kryptonbutterfly.l4j.config.ProjectConfig;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.prefs.FileType;
 import kryptonbutterfly.l4j.prefs.FileType.LocalizingFileType;
-import kryptonbutterfly.l4j.startup.Localizer4J;
 import kryptonbutterfly.l4j.util.Constants;
 import kryptonbutterfly.l4j.util.ObservableLangDialog;
 import kryptonbutterfly.l4j.util.UpdateableComboBoxModel;
@@ -67,7 +67,7 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		borderLayout.setVgap(5);
 		borderLayout.setHgap(5);
 		
-		Localizer4J.prefs.newProjectWindow.setBounds(this);
+		Globals.windowStates.newProjectWindow.setBounds(this);
 		reg("New Project.title", this::setTitle);
 		
 		JPanel panel_1 = new JPanel();
@@ -122,7 +122,7 @@ public class ProjectGui extends ObservableLangDialog<BusinessLogic, ProjectConfi
 		fileTypes			= FileType.localized(langManager);
 		final var typesModel = new UpdateableComboBoxModel<>(fileTypes);
 		comboBoxFileType.setModel(typesModel);
-		comboBoxFileType.setSelectedItem(FileType.match(Localizer4J.prefs.fileSettings.languageFileType, fileTypes));
+		comboBoxFileType.setSelectedItem(FileType.match(Globals.prefs.fileSettings.languageFileType, fileTypes));
 		langChangeListener = (s1, s2) -> typesModel.fireChange();
 		l10n.addLanguageChangeListener(langChangeListener);
 		comboBoxFileType.setMaximumSize(new Dimension(32767, 32));

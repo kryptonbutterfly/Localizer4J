@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import kryptonbutterfly.i18n.Localizer;
-import kryptonbutterfly.l4j.startup.Localizer4J;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.util.ObservableLangDialog;
 import kryptonbutterfly.util.swing.ApplyAbortPanel;
 import kryptonbutterfly.util.swing.events.GuiCloseEvent;
@@ -29,7 +29,7 @@ public class LangGui extends ObservableLangDialog<BusinessLogic, String, Void>
 	public LangGui(Window owner, ModalityType modality, Consumer<GuiCloseEvent<String>> closeListener, Localizer l10n)
 	{
 		super(owner, modality, closeListener, l10n);
-		Localizer4J.prefs.newLangWindow.setBounds(this);
+		Globals.windowStates.newLangWindow.setBounds(this);
 		setResizable(false);
 		
 		JPanel panelContent = new JPanel();

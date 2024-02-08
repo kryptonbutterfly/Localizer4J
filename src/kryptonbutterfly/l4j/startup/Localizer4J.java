@@ -19,32 +19,33 @@ import kryptonbutterfly.i18n.MissingTranslationException;
 import kryptonbutterfly.i18n.ResourceLoader;
 import kryptonbutterfly.io.FileSystemUtils;
 import kryptonbutterfly.l4j.misc.Assets;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.prefs.Prefs;
 import kryptonbutterfly.l4j.ui.main.MainGui;
 import kryptonbutterfly.l4j.util.Constants;
 import kryptonbutterfly.monads.opt.Opt;
-import kryptonbutterfly.os.Platforms;
 import kryptonbutterfly.reflectionUtils.Accessor;
 import kryptonbutterfly.shortcut.FreedesktopOrgShortcut;
 import kryptonbutterfly.util.io.stream.StreamUtils;
 import kryptonbutterfly.util.swing.ObservableGui;
+import kryptonbutterfly.util.swing.events.GuiCloseEvent;
 import kryptonbutterfly.xmlConfig4J.FileConfig;
 
 public class Localizer4J
 {
-	private static final File	APP_FOLDER		= new File(
-		Platforms.getAppDataFile(),
-		File.separator + ".config" + File.separator + "Localizer4J");
-	private static final File	CONFIG_FOLDER	= new File(APP_FOLDER, "configs");
-	private static final File	LOG_FOLDER		= new File(APP_FOLDER, "logs");
-	private static final File	LOG_FILE		= new File(LOG_FOLDER, "localizer4J.log");
+	// private static final File APP_FOLDER = new File(
+	// Platforms.getAppDataFile(),
+	// File.separator + ".config" + File.separator + "Localizer4J");
+	// private static final File CONFIG_FOLDER = new File(APP_FOLDER, "configs");
+	// private static final File LOG_FOLDER = new File(APP_FOLDER, "logs");
+	// private static final File LOG_FILE = new File(LOG_FOLDER, "localizer4J.log");
 	
 	static
 	{
-		System.setProperty("localizer4J.logfile", LOG_FILE.getPath());
+		System.setProperty("localizer4J.logfile", Globals.LOG_FILE.getPath());
 	}
-	
-	public static final Prefs prefs = new Prefs(new File(CONFIG_FOLDER, "config.xml"));
+	// public static final Prefs prefs = new Prefs(new File(CONFIG_FOLDER,
+	// "config.xml"));
 	
 	public static void main(String[] args)
 	{
@@ -53,10 +54,11 @@ public class Localizer4J
 	
 	private static void main(ProgramArgs args)
 	{
-		loadConfig(prefs);
+		loadConfig(Globals.prefs);
+		loadConfig(Globals.windowStates);
 		try
 		{
-			Localizer l10n = loadI18n(prefs);
+			Localizer l10n = loadI18n(Globals.prefs);
 			
 			setLookAndFeel();
 			
@@ -65,7 +67,7 @@ public class Localizer4J
 			if (!args.initialized && args.projectFile == null)
 				createAppShortcut();
 			
-			EventQueue.invokeLater(() -> new MainGui(e -> prefs.save(), args, l10n));
+			EventQueue.invokeLater(() -> new MainGui(Localizer4J::persistConfigs, args, l10n));
 		}
 		catch (IOException e)
 		{
@@ -73,19 +75,24 @@ public class Localizer4J
 		}
 	}
 	
+	private static void persistConfigs(GuiCloseEvent<Void> gce)
+	{
+		Globals.prefs.save();
+		Globals.windowStates.save();
+	}
+	
 	private static Localizer loadI18n(Prefs prefs) throws IOException
 	{
 		final String			localizationConfig	= Assets.ASSETS_LANGS + "i18n.xml";
 		final I18nStreamConfig	i18nConfig			= new I18nStreamConfig();
-		final ResourceLoader	resourceLoader		= resource -> Localizer4J.class
-			.getResourceAsStream(resource);
+		final ResourceLoader	resourceLoader		= Localizer4J.class::getResourceAsStream;
 		
 		LocalizationManager.loadConfig(i18nConfig, localizationConfig, resourceLoader);
 		
 		LocalizationManager localizationManager = new LocalizationManager(i18nConfig, resourceLoader);
 		localizationManager.addLocalizationListener(event -> {
-			final String message = String
-				.format("No translation found for:\"%s\" in %s", event.identifier(), event.language());
+			final String message = "No translation found for:\"%s\" in %s"
+				.formatted(event.identifier(), event.language());
 			if (localizationManager.throwWhenMissing)
 			{
 				event.exception = new MissingTranslationException(message);

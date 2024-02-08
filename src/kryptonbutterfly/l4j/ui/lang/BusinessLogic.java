@@ -2,7 +2,7 @@ package kryptonbutterfly.l4j.ui.lang;
 
 import java.awt.event.ActionEvent;
 
-import kryptonbutterfly.l4j.startup.Localizer4J;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.util.swing.Logic;
 import kryptonbutterfly.util.swing.events.GuiCloseEvent;
@@ -28,9 +28,6 @@ final class BusinessLogic extends Logic<LangGui, Void>
 	@Override
 	protected void disposeAction()
 	{
-		gui.if_(gui -> {
-			Localizer4J.prefs.newLangWindow.posX	= gui.getX();
-			Localizer4J.prefs.newLangWindow.posY	= gui.getY();
-		});
+		gui.if_(Globals.windowStates.newLangWindow::persistBounds);
 	}
 }

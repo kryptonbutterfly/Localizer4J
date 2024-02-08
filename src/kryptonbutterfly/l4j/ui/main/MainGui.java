@@ -36,8 +36,7 @@ import kryptonbutterfly.i18n.Localizer;
 import kryptonbutterfly.l4j.data.gui.Translatable.TranslationState;
 import kryptonbutterfly.l4j.data.persistence.Language;
 import kryptonbutterfly.l4j.misc.Assets;
-import kryptonbutterfly.l4j.prefs.GuiPrefs;
-import kryptonbutterfly.l4j.startup.Localizer4J;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.startup.ProgramArgs;
 import kryptonbutterfly.l4j.ui.main.parts.CountTableCellRenderer;
 import kryptonbutterfly.l4j.ui.main.parts.TableModelClasses;
@@ -104,15 +103,12 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 	{
 		super(closeListener, l10n, l10n);
 		
-		final GuiPrefs guiPrefs = Localizer4J.prefs.mainWindow;
-		
 		reg(lineTitle, s -> tableModelClasses.setHeaderTitle(s, 0), s -> tableModelMisc.setHeaderTitle(s, 0));
 		reg(classTitle, s -> tableModelClasses.setHeaderTitle(s, 1));
 		reg(fileTitle, s -> tableModelMisc.setHeaderTitle(s, 1));
 		reg(textTitle, s -> tableModelMisc.setHeaderTitle(s, 2));
 		
-		businessLogic.if_(bl ->
-		{
+		businessLogic.if_(bl -> {
 			tableModel = new FilterTableModel(
 				new String[] { countTitle, identifierTitle },
 				t -> t.getTranslationState() != TranslationState.MISC_TRANSLATABLE);
@@ -120,10 +116,10 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 			reg(identifierTitle, s -> tableModel.setHeaderTitle(s, 1));
 		});
 		
-		setAlwaysOnTop(Localizer4J.prefs.pinnedOnTop);
+		setAlwaysOnTop(Globals.prefs.pinnedOnTop);
 		reg("Main.title", this::setTitle);
 		setMinimumSize(new Dimension(600, 400));
-		guiPrefs.setBoundsAndState(this);
+		Globals.windowStates.mainWindow.setBoundsAndState(this);
 		
 		final ImageIcon	pinnedIcon		= ColorUtils
 			.selectResize(getBackground(), Assets.PINNED_LIGHT, Assets.PINNED_DARK, 20, 20);
@@ -219,7 +215,7 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		pin.setOpaque(false);
 		pin.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		pin.setHorizontalAlignment(SwingConstants.TRAILING);
-		pin.setSelected(Localizer4J.prefs.pinnedOnTop);
+		pin.setSelected(Globals.prefs.pinnedOnTop);
 		menuBar.add(pin);
 		businessLogic.if_(bl -> pin.addActionListener(bl::changePinned));
 		
@@ -416,15 +412,14 @@ public class MainGui extends ObservableLangGui<BusinessLogic, Void, Localizer>
 		panel_2.add(btnRemove);
 		businessLogic.if_(bl -> btnRemove.addActionListener(bl::removeButton));
 		
-		businessLogic.if_(bl ->
-		{
+		businessLogic.if_(bl -> {
 			bl.updateRecent();
 			bl.init(args);
 		});
 		
-		splitPane.setDividerLocation(Localizer4J.prefs.layout.keyTableWidth);
-		splitPaneValue.setDividerLocation(Localizer4J.prefs.layout.translationHeight);
-		splitOccurences.setDividerLocation(Localizer4J.prefs.layout.occurenceHeight);
+		splitPane.setDividerLocation(Globals.windowStates.layout.keyTableWidth);
+		splitPaneValue.setDividerLocation(Globals.windowStates.layout.translationHeight);
+		splitOccurences.setDividerLocation(Globals.windowStates.layout.occurenceHeight);
 		
 		initialized = true;
 	}

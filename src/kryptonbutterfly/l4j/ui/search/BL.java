@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.function.BiFunction;
 
 import kryptonbutterfly.functions.UnaryOperator;
-import kryptonbutterfly.l4j.startup.Localizer4J;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.util.StringUtils;
 import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.util.swing.Logic;
@@ -42,10 +42,7 @@ final class BL extends Logic<SearchGui, SearchKeyData>
 	protected void disposeAction()
 	{
 		gui.if_(gui -> {
-			Localizer4J.prefs.searchWindow.posX		= gui.getX();
-			Localizer4J.prefs.searchWindow.posY		= gui.getY();
-			Localizer4J.prefs.searchWindow.width	= gui.getWidth();
-			Localizer4J.prefs.searchWindow.height	= gui.getHeight();
+			Globals.windowStates.searchWindow.persistBounds(gui);
 		});
 	}
 }

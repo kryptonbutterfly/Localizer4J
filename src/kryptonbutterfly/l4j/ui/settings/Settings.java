@@ -20,11 +20,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import kryptonbutterfly.i18n.Localizer;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.prefs.FileSettings;
 import kryptonbutterfly.l4j.prefs.FileType;
 import kryptonbutterfly.l4j.prefs.FileType.LocalizingFileType;
-import kryptonbutterfly.l4j.prefs.GuiPrefs;
-import kryptonbutterfly.l4j.startup.Localizer4J;
 import kryptonbutterfly.l4j.util.ObservableLangDialog;
 import kryptonbutterfly.l4j.util.UpdateableComboBoxModel;
 import kryptonbutterfly.util.swing.events.GuiCloseEvent;
@@ -54,7 +53,7 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		Consumer<GuiCloseEvent<Void>> closeListener,
 		Localizer l10n)
 	{
-		this(owner, modality, closeListener, Localizer4J.prefs.fileSettings, l10n, true);
+		this(owner, modality, closeListener, Globals.prefs.fileSettings, l10n, true);
 	}
 	
 	public Settings(
@@ -78,11 +77,10 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 		super(owner, modality, closeListener, l10n, fileSettings);
 		this.isGeneral	= isGeneral;
 		this.guiPrefs	= fileSettings;
-		GuiPrefs prefs = Localizer4J.prefs.settingsWindow;
 		
 		reg("Settings.title", this::setTitle);
 		
-		setBounds(prefs.posX, prefs.posY, 450, 260);
+		Globals.windowStates.settingsWindow.setBounds(this);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -173,7 +171,7 @@ public class Settings extends ObservableLangDialog<BusinessLogic, Void, FileSett
 			panel_2.add(lblHistoryMaxLength);
 			
 			spinnerHistoryLength = new JSpinner();
-			spinnerHistoryLength.setModel(new SpinnerNumberModel(Localizer4J.prefs.history.maxLength, 0, 20, 1));
+			spinnerHistoryLength.setModel(new SpinnerNumberModel(Globals.prefs.history.maxLength, 0, 20, 1));
 			panel_2.add(spinnerHistoryLength);
 			
 			JLabel lblUILanguage = new JLabel();

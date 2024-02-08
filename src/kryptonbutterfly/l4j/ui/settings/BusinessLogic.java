@@ -2,9 +2,9 @@ package kryptonbutterfly.l4j.ui.settings;
 
 import java.awt.event.ActionEvent;
 
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.prefs.FileSettings;
 import kryptonbutterfly.l4j.prefs.FileType.LocalizingFileType;
-import kryptonbutterfly.l4j.startup.Localizer4J;
 import kryptonbutterfly.util.swing.Logic;
 
 final class BusinessLogic extends Logic<Settings, FileSettings>
@@ -46,12 +46,12 @@ final class BusinessLogic extends Logic<Settings, FileSettings>
 			fileSettings.versionListFile		= gui.chckbxSaveVersionFile.isSelected();
 			if (gui.isGeneral)
 			{
-				Localizer4J.prefs.history.maxLength = (int) gui.spinnerHistoryLength.getModel().getValue();
+				Globals.prefs.history.maxLength = (int) gui.spinnerHistoryLength.getModel().getValue();
 				
-				while (Localizer4J.prefs.history.recent.size() > Localizer4J.prefs.history.maxLength)
-					Localizer4J.prefs.history.recent.removeLast();
+				while (Globals.prefs.history.recent.size() > Globals.prefs.history.maxLength)
+					Globals.prefs.history.recent.removeLast();
 				
-				Localizer4J.prefs.language = gui.localizer().currentLanguage();
+				Globals.prefs.language = gui.localizer().currentLanguage();
 			}
 			gui.dispose();
 		});
@@ -60,7 +60,7 @@ final class BusinessLogic extends Logic<Settings, FileSettings>
 	void buttonCancle(ActionEvent event)
 	{
 		gui.if_(gui -> {
-			gui.localizer().setCurrentLanguage(Localizer4J.prefs.language);
+			gui.localizer().setCurrentLanguage(Globals.prefs.language);
 			gui.dispose();
 		});
 	}
@@ -69,9 +69,8 @@ final class BusinessLogic extends Logic<Settings, FileSettings>
 	protected void disposeAction()
 	{
 		gui.if_(gui -> {
-			Localizer4J.prefs.settingsWindow.posX	= gui.getX();
-			Localizer4J.prefs.settingsWindow.posY	= gui.getY();
-			Localizer4J.prefs.save();
+			Globals.windowStates.settingsWindow.persistBounds(gui);
+			Globals.windowStates.save(); // TODO evaluate if necessary!
 		});
 	}
 }

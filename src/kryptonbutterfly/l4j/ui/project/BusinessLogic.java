@@ -7,8 +7,8 @@ import java.nio.file.Path;
 import javax.swing.JFileChooser;
 
 import kryptonbutterfly.l4j.config.ProjectConfig;
+import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.prefs.FileType.LocalizingFileType;
-import kryptonbutterfly.l4j.startup.Localizer4J;
 import kryptonbutterfly.l4j.util.Constants;
 import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.util.swing.Logic;
@@ -137,12 +137,7 @@ final class BusinessLogic extends Logic<ProjectGui, Void>
 	@Override
 	protected void disposeAction()
 	{
-		gui.if_(gui -> {
-			Localizer4J.prefs.newProjectWindow.height	= gui.getHeight();
-			Localizer4J.prefs.newProjectWindow.width	= gui.getWidth();
-			Localizer4J.prefs.newProjectWindow.posX		= gui.getX();
-			Localizer4J.prefs.newProjectWindow.posY		= gui.getY();
-		});
+		gui.if_(Globals.windowStates.newProjectWindow::persistBounds);
 	}
 	
 	private void validate()

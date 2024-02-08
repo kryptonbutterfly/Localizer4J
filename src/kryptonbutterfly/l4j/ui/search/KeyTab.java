@@ -11,7 +11,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import kryptonbutterfly.l4j.prefs.GuiPrefs;
 import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.util.swing.ApplyAbortPanel;
 
@@ -21,7 +20,7 @@ final class KeyTab
 	final JPanel		panel;
 	final JCheckBox		chckbxCaseSensitive;
 	
-	KeyTab(SearchGui gui, Opt<BL> bL, GuiPrefs guiPrefs, BiConsumer<String, Consumer<String>> reg)
+	KeyTab(SearchGui gui, Opt<BL> bL, BiConsumer<String, Consumer<String>> reg)
 	{
 		final var panelContent = Box.createVerticalBox();
 		
