@@ -1,9 +1,10 @@
 package kryptonbutterfly.l4j.prefs;
 
-import java.awt.Frame;
 import java.io.File;
 
 import kryptonbutterfly.l4j.util.Constants;
+import kryptonbutterfly.util.swing.state.WindowState;
+import kryptonbutterfly.util.swing.state.WindowState.ExtendedState;
 import kryptonbutterfly.xmlConfig4J.FileConfig;
 import kryptonbutterfly.xmlConfig4J.annotations.Value;
 
@@ -15,19 +16,19 @@ public class State extends FileConfig implements Constants
 	}
 	
 	@Value
-	public GuiPrefs mainWindow = new GuiPrefs(100, 100, 810, 442, Frame.MAXIMIZED_BOTH);
+	public WindowState mainWindow = new WindowState(100, 100, 810, 442, ExtendedState.MAXIMIZED_BOTH);
 	
 	@Value
-	public GuiPrefs settingsWindow = new GuiPrefs();
+	public WindowState settingsWindow = new WindowState();
 	
 	@Value
-	public GuiPrefs newLangWindow = new GuiPrefs(100, 100, 320, 110, Frame.NORMAL);
+	public WindowState newLangWindow = new WindowState(100, 100, 320, 110);
 	
 	@Value
-	public GuiPrefs newProjectWindow = new GuiPrefs(100, 100, 550, 450, Frame.NORMAL);
+	public WindowState newProjectWindow = new WindowState(100, 100, 550, 450);
 	
 	@Value
-	public GuiPrefs searchWindow = new GuiPrefs(100, 100, 450, 300, Frame.NORMAL);
+	public WindowState searchWindow = new WindowState(100, 100, 450, 300);
 	
 	@Value
 	public MainWindowLayout layout = new MainWindowLayout();

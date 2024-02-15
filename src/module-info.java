@@ -27,7 +27,7 @@ module kryptonbutterfly.Localizer4J
 	requires kryptonbutterfly.System;
 	requires kryptonbutterfly.LocalizationVersionConfig;
 	requires kryptonbutterfly.ReflectionUtils;
-	requires kryptonbutterfly.SwingUtils;
+	requires transitive kryptonbutterfly.SwingUtils;
 	requires kryptonbutterfly.xmlConfig4J;
 	requires kryptonbutterfly.mathUtils;
 	requires kryptonbutterfly.JavaLexer;

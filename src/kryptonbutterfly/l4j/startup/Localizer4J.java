@@ -26,6 +26,7 @@ import kryptonbutterfly.l4j.util.Constants;
 import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.reflectionUtils.Accessor;
 import kryptonbutterfly.shortcut.FreedesktopOrgShortcut;
+import kryptonbutterfly.shortcut.FreedesktopOrgShortcut.LocalizableArgument;
 import kryptonbutterfly.util.io.stream.StreamUtils;
 import kryptonbutterfly.util.swing.ObservableGui;
 import kryptonbutterfly.util.swing.events.GuiCloseEvent;
@@ -33,19 +34,10 @@ import kryptonbutterfly.xmlConfig4J.FileConfig;
 
 public class Localizer4J
 {
-	// private static final File APP_FOLDER = new File(
-	// Platforms.getAppDataFile(),
-	// File.separator + ".config" + File.separator + "Localizer4J");
-	// private static final File CONFIG_FOLDER = new File(APP_FOLDER, "configs");
-	// private static final File LOG_FOLDER = new File(APP_FOLDER, "logs");
-	// private static final File LOG_FILE = new File(LOG_FOLDER, "localizer4J.log");
-	
 	static
 	{
 		System.setProperty("localizer4J.logfile", Globals.LOG_FILE.getPath());
 	}
-	// public static final Prefs prefs = new Prefs(new File(CONFIG_FOLDER,
-	// "config.xml"));
 	
 	public static void main(String[] args)
 	{
@@ -179,15 +171,15 @@ public class Localizer4J
 		}
 		FreedesktopOrgShortcut shortcut = new FreedesktopOrgShortcut(new File(Assets.APPLICATION_NAME + ".desktop"));
 		FileSystemUtils.getProgramMainJar().if_(jarFile -> {
-			shortcut.exec			= Opt.of("java -jar " + jarFile.getAbsolutePath() + " -i -pF ");
-			shortcut.type			= Opt.of("Application");
-			shortcut.terminal		= Opt.of("false");
-			shortcut.version		= Opt.of("1.0");
-			shortcut.icon			= Opt.of(new File(Assets.ICON_FILE_NAME).getAbsolutePath());
-			shortcut.name			= Opt.of(new FreedesktopOrgShortcut.LocalizableArgument(Assets.APPLICATION_NAME));
-			shortcut.categories		= Opt.of("Development;");
-			shortcut.genericName	= Opt.of(new FreedesktopOrgShortcut.LocalizableArgument(Assets.APPLICATION_NAME));
-			shortcut.keywords		= Opt.of("i18n, l10n, translate, localize");
+			shortcut.exec("java -jar " + jarFile.getAbsolutePath() + " -i -pF ")
+				.type("Application")
+				.terminal("false")
+				.version("1.0")
+				.icon(new File(Assets.ICON_FILE_NAME).getAbsolutePath())
+				.name(new LocalizableArgument(Assets.APPLICATION_NAME))
+				.categories("Development;")
+				.genericName(new LocalizableArgument(Assets.APPLICATION_NAME))
+				.keywords("i18n, l10m, translate, localize");
 			try
 			{
 				shortcut.createShortcut();
