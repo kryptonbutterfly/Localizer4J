@@ -3,6 +3,7 @@ package kryptonbutterfly.l4j.prefs;
 import java.io.File;
 
 import kryptonbutterfly.l4j.util.Constants;
+import kryptonbutterfly.util.swing.state.PersistableValue;
 import kryptonbutterfly.util.swing.state.WindowState;
 import kryptonbutterfly.util.swing.state.WindowState.ExtendedState;
 import kryptonbutterfly.xmlConfig4J.FileConfig;
@@ -12,7 +13,7 @@ public class State extends FileConfig implements Constants
 {
 	public State(File config)
 	{
-		super(config);
+		super(config, Value.class, PersistableValue.class);
 	}
 	
 	@Value

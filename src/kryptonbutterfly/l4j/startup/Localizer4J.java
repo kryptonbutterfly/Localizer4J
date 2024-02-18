@@ -158,17 +158,6 @@ public class Localizer4J
 	
 	private static void createAppShortcut()
 	{
-		try (InputStream iStream = Assets.class.getResourceAsStream(Assets.ASSETS_PACKAGE + Assets.SVG_ICON_FILE))
-		{
-			try (FileOutputStream oStream = new FileOutputStream(new File(Assets.SVG_ICON_FILE)))
-			{
-				StreamUtils.pipe(iStream, oStream);
-			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 		FreedesktopOrgShortcut shortcut = new FreedesktopOrgShortcut(new File(Assets.APPLICATION_NAME + ".desktop"));
 		FileSystemUtils.getProgramMainJar().if_(jarFile -> {
 			shortcut.exec("java -jar " + jarFile.getAbsolutePath() + " -i -pF ")
@@ -183,6 +172,18 @@ public class Localizer4J
 			try
 			{
 				shortcut.createShortcut();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			
+			try (InputStream iStream = Assets.class.getResourceAsStream(Assets.ASSETS_PACKAGE + Assets.SVG_ICON_FILE))
+			{
+				try (FileOutputStream oStream = new FileOutputStream(new File(Assets.SVG_ICON_FILE)))
+				{
+					StreamUtils.pipe(iStream, oStream);
+				}
 			}
 			catch (IOException e)
 			{
