@@ -68,9 +68,6 @@ final class BusinessLogic extends Logic<Settings, FileSettings>
 	@Override
 	protected void disposeAction()
 	{
-		gui.if_(gui -> {
-			Globals.windowStates.settingsWindow.persistBounds(gui);
-			Globals.windowStates.save(); // TODO evaluate if necessary!
-		});
+		gui.if_(Globals.windowStates.settingsWindow::persistBounds);
 	}
 }
