@@ -1,22 +1,22 @@
 package kryptonbutterfly.l4j.startup;
 
-import kryptonbutterfly.args.AProgramArguments;
+import kryptonbutterfly.args.ArgsProperties;
 import kryptonbutterfly.args.Argument;
+import kryptonbutterfly.args.IArgs;
+import kryptonbutterfly.l4j.util.Constants;
 
-public class ProgramArgs extends AProgramArguments
+@ArgsProperties()
+public class ProgramArgs implements IArgs
 {
-	protected ProgramArgs(String[] args, String programInfo)
-	{
-		super(args, programInfo);
-	}
-	
-	@Override
-	protected void addAllParser()
-	{}
-	
 	@Argument(info = "the config file of the project to load", name = "pF")
 	public String[] projectFile;
 	
 	@Argument(info = "creates a shortcut unless set to true or pF is set", name = "i")
-	public boolean initialized;
+	public boolean initialized = false;
+	
+	@Override
+	public String programInfo()
+	{
+		return Constants.PROGRAM_INFO;
+	}
 }

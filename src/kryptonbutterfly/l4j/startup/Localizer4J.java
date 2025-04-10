@@ -12,6 +12,7 @@ import java.lang.reflect.InaccessibleObjectException;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import kryptonbutterfly.args.ArgsParser;
 import kryptonbutterfly.i18n.I18nStreamConfig;
 import kryptonbutterfly.i18n.LocalizationManager;
 import kryptonbutterfly.i18n.Localizer;
@@ -41,7 +42,9 @@ public class Localizer4J
 	
 	public static void main(String[] args)
 	{
-		main(new ProgramArgs(args, Constants.PROGRAM_INFO));
+		final var argsParser = new ArgsParser();
+		argsParser.sanityCheck = true;
+		main(argsParser.parse(ProgramArgs::new, args));
 	}
 	
 	private static void main(ProgramArgs args)

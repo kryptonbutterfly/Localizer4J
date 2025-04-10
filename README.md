@@ -16,7 +16,7 @@ A Language file Editor with special sauce for java projects.
 <dependency>
   <groupId>de.tinycodecrank</groupId>
   <artifactId>localizer4j</artifactId>
-  <version>2.4.1</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
@@ -24,4 +24,5 @@ A Language file Editor with special sauce for java projects.
 
 java version | app version | jar | deb
 :----------: | :---------: | :-: | :-:
+18+          | 3.0.0       | [Localizer4J.jar](https://github.com/kryptonbutterfly/Localizer4J/releases/download/v3.0.0/Localizer4J.jar) | [Localizer4J-3.0.0.deb](https://github.com/kryptonbutterfly/Localizer4J/releases/download/v3.0.0/Localizer4J3.0.0.deb)
 18+          | 2.4.0       | [Localizer4J.jar](https://github.com/kryptonbutterfly/Localizer4J/releases/download/v2.4.0/Localizer4J.jar) | [Localizer4J-2.4.0.deb](https://github.com/kryptonbutterfly/Localizer4J/releases/download/v2.4.0/Localizer4J-2.4.0.deb)
