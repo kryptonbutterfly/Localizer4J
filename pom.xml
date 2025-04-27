@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>kryptonbutterfly</groupId>
 	<artifactId>localizer4j</artifactId>
@@ -19,14 +21,14 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>18</java.version>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>github</id>
 			<url>https://maven.pkg.github.com/kryptonbutterfly/maven-repo</url>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>kryptonbutterfly</groupId>
@@ -36,12 +38,12 @@
 		<dependency>
 			<groupId>kryptonbutterfly</groupId>
 			<artifactId>tiny_swing_utils</artifactId>
-			<version>3.1.1</version>
+			<version>4.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>kryptonbutterfly</groupId>
 			<artifactId>tiny_system_utils</artifactId>
-			<version>2.1.0</version>
+			<version>2.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>kryptonbutterfly</groupId>
@@ -61,7 +63,7 @@
 		<dependency>
 			<groupId>kryptonbutterfly</groupId>
 			<artifactId>tiny_java_lexer</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>kryptonbutterfly</groupId>
@@ -79,8 +81,14 @@
 			<version>5.9.3</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -129,9 +137,11 @@
 							<minimizeJar>true</minimizeJar>
 							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<entryPoints>
-								<entryPoint>kryptonbutterfly.l4j.startup.Localizer4J</entryPoint>
+								<entryPoint>
+									kryptonbutterfly.l4j.startup.Localizer4J</entryPoint>
 							</entryPoints>
-							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}.jar</outputFile>
+							<outputFile>
+								${project.build.directory}/${project.artifactId}-${project.version}.jar</outputFile>
 						</configuration>
 					</execution>
 				</executions>
