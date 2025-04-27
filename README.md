@@ -3,6 +3,13 @@
 # Localizer4J [![Maven Package](https://github.com/kryptonbutterfly/Localizer4J/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/kryptonbutterfly/Localizer4J/actions/workflows/maven-publish.yml)
 A Language file Editor with special sauce for java projects.
 
+This program enables you to edit language files.
+Supported file types are `.properties`, `.json` and any key-value based files using delimiters, with UTF-8 encoding.
+When editing a language file the application will indicate translations missing from the current language file.
+
+When creating translations for a java project the sources can be linked.
+After linking the editor will search for all String literals in the program and display the occurences of translations within the source code.
+
 ## Getting the latest release
 
 ```xml
