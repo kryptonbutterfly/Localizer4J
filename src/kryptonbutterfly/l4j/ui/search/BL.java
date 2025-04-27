@@ -1,16 +1,27 @@
 package kryptonbutterfly.l4j.ui.search;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.function.BiFunction;
 
 import kryptonbutterfly.functions.UnaryOperator;
 import kryptonbutterfly.l4j.misc.Globals;
+import kryptonbutterfly.l4j.ui.misc.KeyTypedAdapter;
 import kryptonbutterfly.l4j.util.StringUtils;
 import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.util.swing.Logic;
 
 final class BL extends Logic<SearchGui, SearchKeyData>
 {
+	final KeyListener findEnterListener = new KeyTypedAdapter(
+		c -> search(null),
+		KeyEvent.VK_ENTER);
+	
+	final KeyListener escapeListener = new KeyTypedAdapter(
+		c -> abort(null),
+		KeyEvent.VK_ESCAPE);
+	
 	private SearchKeyData data;
 	
 	BL(SearchGui gui, SearchKeyData data)

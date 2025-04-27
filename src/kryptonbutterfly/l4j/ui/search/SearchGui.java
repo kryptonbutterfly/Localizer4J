@@ -9,6 +9,7 @@ import javax.swing.JTabbedPane;
 import kryptonbutterfly.i18n.Localizer;
 import kryptonbutterfly.l4j.misc.Globals;
 import kryptonbutterfly.l4j.util.ObservableLangDialog;
+import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.util.swing.events.GuiCloseEvent;
 
 @SuppressWarnings("serial")
@@ -18,6 +19,8 @@ public final class SearchGui extends ObservableLangDialog<BL, Void, SearchKeyDat
 	static final String	buttonCancel	= "Search.button.cancel";
 	
 	final KeyTab keyTab;
+	
+	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 	
 	public SearchGui(
 		Window owner,
@@ -33,13 +36,23 @@ public final class SearchGui extends ObservableLangDialog<BL, Void, SearchKeyDat
 		setMinimumSize(new Dimension(300, 175));
 		Globals.windowStates.searchWindow.setBounds(this);
 		
-		final var tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		setContentPane(tabbedPane);
 		
 		keyTab = new KeyTab(this, businessLogic, this::reg);
-		tabbedPane.addTab(null, keyTab.panel);
+		tabbedPane.addTab(null, keyTab);
 		reg("Search.Tab.Key", s -> tabbedPane.setTitleAt(0, s));
 		tabbedPane.setEnabledAt(0, true);
+		
+		businessLogic.if_(bl -> tabbedPane.addKeyListener(bl.escapeListener));
+	}
+	
+	public void refocus()
+	{
+		setVisible(true);
+		((RefocusableTab) Opt.of(tabbedPane.getSelectedComponent()).get(() -> {
+			tabbedPane.setSelectedIndex(0);
+			return tabbedPane.getTabComponentAt(0);
+		})).refocus();
 	}
 	
 	@Override

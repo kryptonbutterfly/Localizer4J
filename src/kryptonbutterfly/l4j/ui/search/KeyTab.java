@@ -14,14 +14,16 @@ import javax.swing.JTextField;
 import kryptonbutterfly.monads.opt.Opt;
 import kryptonbutterfly.util.swing.ApplyAbortPanel;
 
-final class KeyTab
+@SuppressWarnings("serial")
+final class KeyTab extends JPanel implements RefocusableTab
 {
 	final JTextField	txtSearch;
-	final JPanel		panel;
 	final JCheckBox		chckbxCaseSensitive;
 	
 	KeyTab(SearchGui gui, Opt<BL> bL, BiConsumer<String, Consumer<String>> reg)
 	{
+		super(new BorderLayout());
+		
 		final var panelContent = Box.createVerticalBox();
 		
 		txtSearch = new JTextField();
@@ -33,19 +35,34 @@ final class KeyTab
 		reg.accept("Search.Checkbox.Case Sensitive", chckbxCaseSensitive::setText);
 		panelSettings.add(chckbxCaseSensitive);
 		
-		panel = new JPanel(new BorderLayout());
-		panel.add(panelContent, BorderLayout.CENTER);
-		panel.add(panelSettings, BorderLayout.EAST);
+		add(panelContent, BorderLayout.CENTER);
+		add(panelSettings, BorderLayout.EAST);
 		
 		bL.if_(bl -> {
-			final var applyAbortPanel = new ApplyAbortPanel(
+			final var	applyAbortPanel	= new ApplyAbortPanel(
 				buttonSearch,
 				bl::search,
 				buttonCancel,
 				bl::abort);
-			reg.accept(buttonSearch, applyAbortPanel.btnButton1::setText);
-			reg.accept(buttonCancel, applyAbortPanel.btnButton2::setText);
-			panel.add(applyAbortPanel, BorderLayout.SOUTH);
+			final var	btnSearch		= applyAbortPanel.btnButton1;
+			final var	btnCancel		= applyAbortPanel.btnButton2;
+			
+			reg.accept(buttonSearch, btnSearch::setText);
+			reg.accept(buttonCancel, btnCancel::setText);
+			
+			txtSearch.addKeyListener(bl.escapeListener);
+			txtSearch.addKeyListener(bl.findEnterListener);
+			chckbxCaseSensitive.addKeyListener(bl.escapeListener);
+			btnSearch.addKeyListener(bl.escapeListener);
+			btnCancel.addKeyListener(bl.escapeListener);
+			
+			add(applyAbortPanel, BorderLayout.SOUTH);
 		});
+	}
+	
+	@Override
+	public void refocus()
+	{
+		txtSearch.requestFocus();
 	}
 }

@@ -74,7 +74,7 @@ class BusinessLogic extends Logic<MainGui, Localizer>
 					e ->
 					{},
 					l10n,
-					new SearchKeyData(gui.table, this::searchKey))));
+					new SearchKeyData(gui.table, this::findNextKey))));
 					
 		if (args.projectFile == null || args.projectFile.length <= 0)
 			return;
@@ -733,6 +733,24 @@ class BusinessLogic extends Logic<MainGui, Localizer>
 		});
 	}
 	
+	private void findNextKey(String search, BiFunction<String, String, Opt<Integer>> distanceFunction)
+	{
+		if (!StringUtils.isNotBlank(search))
+			return;
+		
+		gui.<String>map(gui -> {
+			final int	currentSelection	= gui.table.getSelectedRow();
+			final int	count				= gui.tableModel.getRowCount();
+			for (int row : range(count))
+			{
+				final var key = gui.tableModel.getTranslatable((row + currentSelection + 1) % count).getKey();
+				if (distanceFunction.apply(search, key).isPresent())
+					return key;
+			}
+			return null;
+		}).if_(this::setSelection);
+	}
+	
 	private void searchKey(String search, BiFunction<String, String, Opt<Integer>> distanceFunction)
 	{
 		if (!StringUtils.isNotBlank(search))
@@ -756,9 +774,7 @@ class BusinessLogic extends Logic<MainGui, Localizer>
 				}
 			}
 			return match;
-		}).if_(s -> {
-			setSelection(s);
-		});
+		}).if_(this::setSelection);
 	}
 	
 	void addKey(ActionEvent ae)
@@ -789,10 +805,7 @@ class BusinessLogic extends Logic<MainGui, Localizer>
 	
 	void search(ActionEvent ae)
 	{
-		gui.if_(gui -> {
-			searchGui.setVisible(true);
-			searchGui.requestFocus();
-		});
+		searchGui.refocus();
 	}
 	
 	private void setSelection(String selection)
